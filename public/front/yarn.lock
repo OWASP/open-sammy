@@ -31,10 +31,10 @@ block-ui@2.70.*:
   dependencies:
     jquery ">=1.7.x"
 
-bootstrap-table@1.21.*:
-  version "1.21.4"
-  resolved "https://registry.yarnpkg.com/bootstrap-table/-/bootstrap-table-1.21.4.tgz#b469b5f4efb5fe833026fd1df344f11732b2300a"
-  integrity sha512-Vp0kwkCsZzBINiA1KJ46LSkIa4oA0r6GSuzERZEqkUU8/0JDij2aG4CdYxiOm/UFCPZ9+KuAE4zSjxJLxg5jWw==
+bootstrap-table@1.24.*:
+  version "1.24.0"
+  resolved "https://registry.yarnpkg.com/bootstrap-table/-/bootstrap-table-1.24.0.tgz#9e4710e447a0657f59e8ce4dda3da321535a8145"
+  integrity sha512-dyRf5PQwTgFHj9yjuPXa+GIf4JpuQhsgD1CJrOqhw40qI2gTb3mJfRdoBc7iF2bqzOl+k0RnbAlhSPbGe4VS+w==
 
 bootstrap4-toggle@^3.6.1:
   version "3.6.1"
