@@ -80,12 +80,20 @@ datatables.net-responsive-bs4@2.*:
     datatables.net-responsive "2.5.1"
     jquery ">=1.7"
 
-datatables.net-responsive@2.*, datatables.net-responsive@2.5.1:
+datatables.net-responsive@2.5.1:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/datatables.net-responsive/-/datatables.net-responsive-2.5.1.tgz#9747a3c6e6b59abd33174e1890356357151bb8c0"
   integrity sha512-hyJb2faIzEWUX5Yn4HOSq/6NNB9SXDVbI4OU9ny+XU/2ghZEz4676spOgzpDHTdWvCfM+t1mbUsT70fDiTTr9w==
   dependencies:
     datatables.net "^1.13.0"
+    jquery ">=1.7"
+
+datatables.net-responsive@3.*:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/datatables.net-responsive/-/datatables.net-responsive-3.0.4.tgz#9e8d354f3b4016b60fe0aa588094ef0b31e9c61b"
+  integrity sha512-d1JKaWPRp81xydZrTDqrzGTloXthDtyvwbqiSKYUhDBKWTL4wN5IW5WYr4OBPwu21Ctpi/QgOl7mt9MfyF8KxA==
+  dependencies:
+    datatables.net "^2"
     jquery ">=1.7"
 
 datatables.net@1.*, datatables.net@1.13.11, datatables.net@^1.13.0:
@@ -94,6 +102,13 @@ datatables.net@1.*, datatables.net@1.13.11, datatables.net@^1.13.0:
   integrity sha512-AE6RkMXziRaqzPcu/pl3SJXeRa6fmXQG/fVjuRESujvkzqDCYEeKTTpPMuVJSGYJpPi32WGSphVNNY1G4nSN/g==
   dependencies:
     jquery "1.8 - 4"
+
+datatables.net@^2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/datatables.net/-/datatables.net-2.2.2.tgz#de45c9ef18775499481ffdae81a8de6a10d264a0"
+  integrity sha512-gfODIKE3gpgbVeZy2QGj2Dq9roO6hy00S+k1knklrqlMyAMrh1wt0Q6ryBUM7gU96U77ysbq8dYhxFdmcC/oPQ==
+  dependencies:
+    jquery ">=1.7"
 
 daterangepicker@3.*:
   version "3.1.0"

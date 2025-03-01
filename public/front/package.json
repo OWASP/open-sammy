@@ -14,7 +14,7 @@
     "chartjs-plugin-trendline": "2.*",
     "datatables.net": "1.*",
     "datatables.net-bs4": "1.*",
-    "datatables.net-responsive": "2.*",
+    "datatables.net-responsive": "3.*",
     "datatables.net-responsive-bs4": "2.*",
     "daterangepicker": "3.*",
     "i18next": "19.*",
