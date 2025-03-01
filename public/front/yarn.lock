@@ -132,7 +132,7 @@ jquery.fancytree@2.*:
   resolved "https://registry.yarnpkg.com/jquery.fancytree/-/jquery.fancytree-2.38.4.tgz#377599e76e76047a1e50debe00be4658fa003396"
   integrity sha512-f4Fv5jZiZ6pBml/9txcJRAQDZpqQGGoJ8BUbicZKcO4CpgGbqBX9W7eQFwEaKQS0bxdVBLbqWQ9RoUK05ON2kQ==
 
-jquery@*, "jquery@1.8 - 4", jquery@3.*, jquery@>=1.10, jquery@>=1.12.0, jquery@>=1.7, jquery@>=1.7.x, jquery@>=1.8:
+jquery@*, "jquery@1.8 - 4", jquery@3.*, jquery@>=1.10, jquery@>=1.12.0, jquery@>=1.7, jquery@>=1.7.x:
   version "3.7.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.7.1.tgz#083ef98927c9a6a74d05a6af02806566d16274de"
   integrity sha512-m4avr8yL8kmFN8psrbFFFmB/If14iN5o9nw/NgnnM+kybDJpRsAynV2BsfpTYrTRysYUdADVD7CkUUizgkpLfg==
@@ -192,12 +192,10 @@ smartwizard@4.*:
   resolved "https://registry.yarnpkg.com/smartwizard/-/smartwizard-4.4.1.tgz#4107314c3167c82db86fae77daeca05c84d72c3f"
   integrity sha512-tSvrRi+QA3Tha26wwhLUZF/rgyyebzg9nndlG45i66JeI+q0CmpP97W9X6+re6tApB9YSPH3wREf40gt06xPqQ==
 
-textarea-autosize@0.*:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/textarea-autosize/-/textarea-autosize-0.4.2.tgz#f2fb0263b27fb4e7cf67abfe6e51f3cd712720cf"
-  integrity sha512-a56O2ByoIrJUw2MFK0PSpLLIkVI/lXjjdnekO0xUIafTR/+sM1iPe3jnjPJfWqHJCKvmUqChbdHNXBklnnZbvg==
-  dependencies:
-    jquery ">=1.8"
+textarea-autosize@1.*:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/textarea-autosize/-/textarea-autosize-1.0.0.tgz#46dc14b27501a82225a35886599150419f39d670"
+  integrity sha512-ZsoRhzZdXvRE5wDSBToIwVtQTZs/bzBcXDQ2IGBXK+f+RX5OaQn2Oki/a6myfamy0a+w+MmjmoxJWVNdeo2uWQ==
 
 toastr@2.*:
   version "2.1.4"

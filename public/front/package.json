@@ -33,7 +33,7 @@
     "select2-bootstrap4-theme": "1.*",
     "slick-carousel": "1.*",
     "smartwizard": "4.*",
-    "textarea-autosize": "0.*",
+    "textarea-autosize": "1.*",
     "toastr": "2.*",
     "wnumb": "1.*"
   }
