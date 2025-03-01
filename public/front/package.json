@@ -32,7 +32,7 @@
     "select2": "^4.0.13",
     "select2-bootstrap4-theme": "1.*",
     "slick-carousel": "1.*",
-    "smartwizard": "4.*",
+    "smartwizard": "6.*",
     "textarea-autosize": "0.*",
     "toastr": "2.*",
     "wnumb": "1.*"

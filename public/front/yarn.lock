@@ -187,10 +187,10 @@ slick-carousel@1.*:
   resolved "https://registry.yarnpkg.com/slick-carousel/-/slick-carousel-1.8.1.tgz#a4bfb29014887bb66ce528b90bd0cda262cc8f8d"
   integrity sha512-XB9Ftrf2EEKfzoQXt3Nitrt/IPbT+f1fgqBdoxO3W/+JYvtEOW6EgxnWfr9GH6nmULv7Y2tPmEX3koxThVmebA==
 
-smartwizard@4.*:
-  version "4.4.1"
-  resolved "https://registry.yarnpkg.com/smartwizard/-/smartwizard-4.4.1.tgz#4107314c3167c82db86fae77daeca05c84d72c3f"
-  integrity sha512-tSvrRi+QA3Tha26wwhLUZF/rgyyebzg9nndlG45i66JeI+q0CmpP97W9X6+re6tApB9YSPH3wREf40gt06xPqQ==
+smartwizard@6.*:
+  version "6.0.6"
+  resolved "https://registry.yarnpkg.com/smartwizard/-/smartwizard-6.0.6.tgz#1582552d482c9c77d149a1febecd6915c5df4b5d"
+  integrity sha512-avdXqjgoMGsP2AqHhOPTZ8HYqz1yv3ceb+xOGGgJNCaWiEHdCiySbBQivzDL+XfeDP4xkyTAJVcf+zy8FlM1WQ==
 
 textarea-autosize@0.*:
   version "0.4.2"
