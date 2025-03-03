@@ -63,15 +63,7 @@ chartjs-plugin-trendline@2.*:
   resolved "https://registry.yarnpkg.com/chartjs-plugin-trendline/-/chartjs-plugin-trendline-2.1.6.tgz#5090155cae06681c9888a63305991d868cff3596"
   integrity sha512-73lpSv87RcIeu0so4ndEE48Xf08Q4scz079tSgYdfeGuIce4JKcSE64oluhz/j6NpBr50Z7PPwolGJ0cLtknRw==
 
-datatables.net-bs4@1.*:
-  version "1.13.11"
-  resolved "https://registry.yarnpkg.com/datatables.net-bs4/-/datatables.net-bs4-1.13.11.tgz#b31b9006f1901746e6c835925523608bd0a29025"
-  integrity sha512-1LnxzQDFKpwvBETc8wtUtQ+pUXhs6NJomNST5pRzzHAccckkj9rZeOp3mevKDnDJKuNhBM1Y0rIeZGylJnqh9A==
-  dependencies:
-    datatables.net "1.13.11"
-    jquery "1.8 - 4"
-
-datatables.net-bs4@^2:
+datatables.net-bs4@2.*, datatables.net-bs4@^2:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/datatables.net-bs4/-/datatables.net-bs4-2.2.2.tgz#bb668037b922ca8bdbb2e8ec8a321963409d973d"
   integrity sha512-BrG2e4HVgtLydGWXLjnvniNfd4U537KKbRIyfS2PZ+y0pnjA+jIbYynceJWV4xGPA31XhWnqaJumTIfAPUVhxA==
@@ -96,7 +88,7 @@ datatables.net-responsive@3.*, datatables.net-responsive@3.0.4:
     datatables.net "^2"
     jquery ">=1.7"
 
-datatables.net@1.*, datatables.net@1.13.11:
+datatables.net@1.*:
   version "1.13.11"
   resolved "https://registry.yarnpkg.com/datatables.net/-/datatables.net-1.13.11.tgz#e2a4c8b50553512f241ebfcbc078d74d551183b2"
   integrity sha512-AE6RkMXziRaqzPcu/pl3SJXeRa6fmXQG/fVjuRESujvkzqDCYEeKTTpPMuVJSGYJpPi32WGSphVNNY1G4nSN/g==
