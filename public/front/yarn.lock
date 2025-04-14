@@ -143,9 +143,9 @@ jquery-circle-progress@1.*:
     jquery "*"
 
 jquery.fancytree@2.*:
-  version "2.38.4"
-  resolved "https://registry.yarnpkg.com/jquery.fancytree/-/jquery.fancytree-2.38.4.tgz#377599e76e76047a1e50debe00be4658fa003396"
-  integrity sha512-f4Fv5jZiZ6pBml/9txcJRAQDZpqQGGoJ8BUbicZKcO4CpgGbqBX9W7eQFwEaKQS0bxdVBLbqWQ9RoUK05ON2kQ==
+  version "2.38.5"
+  resolved "https://registry.yarnpkg.com/jquery.fancytree/-/jquery.fancytree-2.38.5.tgz#69a6de7a50b4068fa19e5791f80a10a3977eb6ca"
+  integrity sha512-6ntTplhfYKWz74GLpeeE9B62VqhsF+bd80gLZRDD1gl7Vv9WTqqQrCsrGMMu0PB6JLhNOXhf17xIcYpARG+N3g==
 
 jquery@*, "jquery@1.8 - 4", jquery@3.*, jquery@>=1.10, jquery@>=1.12.0, jquery@>=1.7, jquery@>=1.7.x:
   version "3.7.1"
