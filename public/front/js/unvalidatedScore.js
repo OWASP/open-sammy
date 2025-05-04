@@ -31,7 +31,11 @@ $(document).ready(() => {
             let shouldAverageOnMaturityLevel = maturityLevel !== "";
             if ($(scoreSpan).data('score')) {
                 if (shouldAverageOnMaturityLevel) {
-                    totalScore += $(scoreSpan).data('score') / $(`.scoreSpan[data-maturity-level=${maturityLevel}]`).length;
+                    let division = $(`.scoreSpan[data-maturity-level=${maturityLevel}]`).length;
+                    if ($("#questionCount").val() !== undefined) {
+                        division = $("#questionCount").val();
+                    }
+                    totalScore += $(scoreSpan).data('score') / division;
                 } else {
                     totalScore += $(scoreSpan).data('score');
                 }

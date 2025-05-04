@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Entity\Abstraction\AbstractEntity;
+use App\Utils\Constants;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -432,7 +433,12 @@ class AssessmentStream extends AbstractEntity
             /** @var AssessmentAnswer $assessmentAnswer */
             if ($assessmentAnswer->getType() === \App\Enum\AssessmentAnswerType::CURRENT) {
                 $activity = $assessmentAnswer->getQuestion()->getActivity();
-                $score += $assessmentAnswer->getAnswer()->getValue() / sizeof($activity->getActivityQuestions());
+                if ($this->getStream()->getPractice()->getBusinessFunction()->getMetamodel()->getId() === Constants::SAMM_ID) {
+                    $score += $assessmentAnswer->getAnswer()->getValue() / sizeof($activity->getActivityQuestions());
+                } else {
+                    $allActivities = sizeof($this->getStream()->getStreamActivities());
+                    $score += $assessmentAnswer->getAnswer()->getValue() / $allActivities;
+                }
             }
         }
 

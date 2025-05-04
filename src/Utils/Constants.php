@@ -18,13 +18,14 @@ class Constants
     public const CSRF_SAFE_METHODS = ['HEAD', 'OPTIONS'];
 
     public const SAMM_ID = 1;
+    public const DSOMM_ID = 2;
 
     public static function getMaxScore(int $metamodelId): int
     {
         if ($metamodelId === self::SAMM_ID) {
             return 3;
         } else {
-            return 7;
+            return 1;
         }
     }
 
@@ -33,7 +34,7 @@ class Constants
         if ($metamodelId === self::SAMM_ID) {
             return 3;
         } else {
-            return 1;
+            return 5;
         }
     }
 }

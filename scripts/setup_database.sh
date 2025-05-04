@@ -20,3 +20,10 @@ sh ./scripts/clone_owasp_samm.sh --env=$environ
 echo "Syncing from OWASP SAMM repo..."
 php bin/console app:sync-from-owasp-samm 1 --env=$environ
 
+
+echo "clone or pull DSOMM model repository"
+sh ./scripts/clone_dsomm.sh --env=$environ
+
+echo "Syncing from DSOMM repo..."
+php bin/console app:sync-from-dsomm 2 --env=$environ
+

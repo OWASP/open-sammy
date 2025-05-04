@@ -128,6 +128,10 @@ class MetamodelService
             }
         }
 
+        usort($questions, function($a, $b) {
+            return $a->getOrder() <=> $b->getOrder();
+        });
+
         return $questions;
     }
 
