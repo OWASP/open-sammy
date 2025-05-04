@@ -14,6 +14,7 @@ use App\Entity\Question;
 use App\Entity\Stream;
 use App\Repository\MetamodelRepository;
 use App\Service\Processing\DsommYamlToDbRecordsSyncer;
+use App\Utils\Constants;
 use Doctrine\DBAL\ConnectionException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -50,7 +51,7 @@ class SyncFromDsommYamlCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $metamodelId = $input->getArgument(self::METAMODEL_COMMAND_PARAMETER_NAME);
-        $metamodelId = $metamodelId ?? 2;
+        $metamodelId = $metamodelId ?? Constants::DSOMM_ID;
         $metamodelId = (int) $metamodelId;
 
         $metamodel = $this->metamodelRepository->find($metamodelId);
