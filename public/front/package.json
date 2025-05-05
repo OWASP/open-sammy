@@ -17,7 +17,7 @@
     "datatables.net-responsive": "3.*",
     "datatables.net-responsive-bs4": "3.*",
     "daterangepicker": "3.*",
-    "i18next": "24.*",
+    "i18next": "25.*",
     "i18next-icu": "2.*",
     "ionicons-npm": "2.*",
     "jquery": "3.*",
