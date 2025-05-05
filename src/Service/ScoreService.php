@@ -261,49 +261,66 @@ class ScoreService
             'SUM(score)'
         );
 
+        $dsommId = Constants::DSOMM_ID;
+        $streamQuestionCountQuery = <<<SQL
+            SELECT stream_id, COUNT(DISTINCT question_id) as stream_question_count
+            FROM question_fully_joined
+            GROUP BY stream_id
+        SQL;
         $sql = /* @lang SQL */
             <<<SQL
-                SELECT t4.stream_id,
-                       t4.stream_name,
-                       t4.currentScore,
-                       t4.targetPostureScore,
-                       t4.streamWeight,
-                       t4.maxStreamWeight,
-                       t4.targetPostureScore - t4.currentScore as delta,
-                       (CASE 
-                           WHEN t4.streamWeight >= (t4.maxStreamWeight / 2) THEN "High" 
-                           WHEN t4.streamWeight >= (t4.maxStreamWeight / 4) THEN "Medium"
-                           WHEN t4.streamWeight > 0 THEN "Low"
-                           ELSE "None"
-                       END) as streamPriority
+        SELECT t4.stream_id,
+               t4.stream_name,
+               t4.currentScore,
+               t4.targetPostureScore,
+               t4.streamWeight,
+               t4.maxStreamWeight,
+               t4.targetPostureScore - t4.currentScore as delta,
+               (CASE 
+                   WHEN t4.streamWeight >= (t4.maxStreamWeight / 2) THEN "High" 
+                   WHEN t4.streamWeight >= (t4.maxStreamWeight / 4) THEN "Medium"
+                   WHEN t4.streamWeight > 0 THEN "Low"
+                   ELSE "None"
+               END) as streamPriority
+            FROM (
+                SELECT T3.stream_id,
+                       stream_name,
+                       ROUND(SUM(score), 2) as currentScore,
+                       ROUND(SUM(targetPostureScore), 2) AS targetPostureScore,
+                       {$nestedWeightFormula} as streamWeight,
+                       {$weightFormula} as maxStreamWeight
+                FROM (
+                    SELECT T1.stream_id AS stream_id, 
+                           T1.stream_name AS stream_name, 
+                           SUM(currentScore) / COALESCE(
+                              CASE WHEN T1.metamodel_id = {$dsommId} THEN stream_question_count ELSE questionCount END, 
+                              1) AS score, 
+                           SUM(targetPostureScore) / COALESCE(
+                              CASE WHEN T1.metamodel_id = {$dsommId} THEN stream_question_count ELSE questionCount END, 
+                              1) AS targetPostureScore 
                     FROM (
-                        SELECT T3.stream_id,
-                               stream_name,
-                               ROUND(SUM(score), 2) as currentScore,
-                               ROUND(SUM(targetPostureScore), 2) AS targetPostureScore,
-                               {$nestedWeightFormula} as streamWeight,
-                               {$weightFormula} as maxStreamWeight
-                        FROM (
-                            SELECT T1.stream_id AS stream_id, T1.stream_name AS stream_name, SUM(currentScore) / COALESCE(questionCount, 1) AS score, SUM(targetPostureScore) / COALESCE(questionCount, 1) AS targetPostureScore 
-                            FROM (
-                                SELECT stream.id as stream_id,
-                                    stream.name as stream_name,
-                                    current_score as currentScore,
-                                    target_posture_score as targetPostureScore,
-                                    activity_id
-                                FROM stream
-                                LEFT JOIN current_and_desired_scores_by_assessment_stream on (stream.id = current_and_desired_scores_by_assessment_stream.stream_id and current_and_desired_scores_by_assessment_stream.assessment_stream_id IN (:assessmentStreams))
-                                LEFT JOIN practice ON stream.practice_id = practice.id
-                                LEFT JOIN business_function ON business_function.id = practice.business_function_id
-                                WHERE business_function.metamodel_id = :metamodelId
-                                ) AS T1
-                            LEFT JOIN
-                            (SELECT question_count AS questionCount, activity_id
-                             FROM activity_question_count
-                            ) AS T2 ON T2.activity_id = T1.activity_id GROUP BY stream_name, T2.activity_id
-                        ) AS T3 GROUP BY stream_id
-                    ) AS t4
-                SQL;
+                        SELECT stream.id as stream_id,
+                            stream.name as stream_name,
+                            current_score as currentScore,
+                            target_posture_score as targetPostureScore,
+                            activity_id,
+                            business_function.metamodel_id as metamodel_id
+                        FROM stream
+                        LEFT JOIN current_and_desired_scores_by_assessment_stream on (stream.id = current_and_desired_scores_by_assessment_stream.stream_id and current_and_desired_scores_by_assessment_stream.assessment_stream_id IN (:assessmentStreams))
+                        LEFT JOIN practice ON stream.practice_id = practice.id
+                        LEFT JOIN business_function ON business_function.id = practice.business_function_id
+                        WHERE business_function.metamodel_id = :metamodelId
+                        ) AS T1
+                    LEFT JOIN
+                    (SELECT question_count AS questionCount, activity_id
+                     FROM activity_question_count
+                    ) AS T2 ON T2.activity_id = T1.activity_id
+                    LEFT JOIN ({$streamQuestionCountQuery}) AS T3_stream_counts 
+                    ON T3_stream_counts.stream_id = T1.stream_id
+                    GROUP BY stream_name, T2.activity_id, T1.metamodel_id
+                ) AS T3 GROUP BY stream_id
+            ) AS t4
+        SQL;
 
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('stream_id', 'streamId');
@@ -353,17 +370,19 @@ class ScoreService
 
         return /* @lang SQL */
             <<<SQL
-                SELECT bf_name,
-                       bf_order,
-                       short_name,
-                       p_order,
-                       stream_name,
-                       activity_id,
-                       question_fully_joined.question_id,
-                       IF(assessment_answer.type = 0, answer.value, 0)                      as score,
-                       IF((SUM(IF(assessment_answer.type=1, answer.value, null)) is null), 
-                           SUM(IF(assessment_answer.type=0, answer.value, 0)), 
-                           SUM(IF(assessment_answer.type=1, answer.value, 0)))              as desiredScore
+            SELECT bf_name,
+                   bf_order,
+                   short_name,
+                   p_order,
+                   stream_name,
+                   activity_id,
+                   question_fully_joined.question_id,
+                   metamodel_id,
+                   IF(assessment_answer.type = 0, answer.value, 0) as score,
+                   IF((SUM(IF(assessment_answer.type=1, answer.value, null)) is null), 
+                       SUM(IF(assessment_answer.type=0, answer.value, 0)), 
+                       SUM(IF(assessment_answer.type=1, answer.value, 0))) as desiredScore,
+                   question_fully_joined.stream_id
                 FROM question_fully_joined
                     LEFT JOIN assessment_stream ON assessment_stream.stream_id = question_fully_joined.stream_id AND assessment_stream.id IN (:assessmentStreams)
                     LEFT JOIN stage ON stage.assessment_stream_id = assessment_stream.id AND stage.id IN
@@ -400,25 +419,36 @@ class ScoreService
         // we need a third select to make sure that the binning is done per question then per stream then per practice
 
         $scoreAndDesiredScoreByQuestion = $this->getScoreAndDesiredScoreByQuestionSQL($improvementLastDate);
+        $streamQuestionCountQuery = "SELECT stream_id, COUNT(DISTINCT question_id) as stream_question_count
+                            FROM question_fully_joined
+                            GROUP BY stream_id";
 
+        $dsommId = Constants::DSOMM_ID;
         $sql = /* @lang SQL */
             <<<SQL
-                SELECT name, short_name, AVG(score) as averageScore, AVG(desiredScore) as averageDesiredScore
+               SELECT name, short_name, AVG(score) as averageScore, AVG(desiredScore) as averageDesiredScore
                 FROM (
                     SELECT stream_name, name, short_name, SUM(desiredScore) as desiredScore, SUM(score) as score, bf_order, p_order
                     FROM (
                         SELECT name, short_name, stream_name, score, desiredScore, bf_order, p_order, V1.activity_id
                         FROM (
                             SELECT bf_name as name, 
-                                   short_name,
-                                   stream_name, 
-                                   SUM(desiredScore) / COALESCE(question_count, 1) as desiredScore,
-                                   SUM(score) / COALESCE(question_count, 1) as score,
-                                   bf_order, 
-                                   p_order, 
-                                   T1.activity_id
+                               short_name,
+                               stream_name, 
+                               SUM(desiredScore) / COALESCE(
+                                  CASE WHEN metamodel_id = {$dsommId} THEN stream_question_count ELSE question_count END, 
+                                  1) as desiredScore,
+                               SUM(score) / COALESCE(
+                                  CASE WHEN metamodel_id = {$dsommId} THEN stream_question_count ELSE question_count END, 
+                                  1) as score,
+                               bf_order, 
+                               p_order, 
+                               T1.activity_id,
+                               metamodel_id
                             FROM ($scoreAndDesiredScoreByQuestion) AS T1
                                 LEFT JOIN activity_question_count AS T2 ON T1.activity_id = T2.activity_id
+                                -- Add join for stream question counts
+                                LEFT JOIN ($streamQuestionCountQuery) AS T3 ON T1.stream_id = T3.stream_id
                             GROUP BY T1.activity_id
                             ) as V1
                         ) as W1
@@ -433,7 +463,6 @@ class ScoreService
         $rsm->addScalarResult('short_name', 'shortName');
         $rsm->addScalarResult('averageDesiredScore', 'averageDesiredScore');
         $rsm->addScalarResult('averageScore', 'averageScore');
-
         $queryResults = $this->entityManager->createNativeQuery($sql, $rsm)
             ->setParameters(['assessmentStreams' => $assessmentStreams, 'metamodel' => $metamodel, 'assessment' => $assessment])->getResult();
         $resultDesired = ['businessFunction' => [], 'securityPractice' => []];
@@ -494,6 +523,7 @@ class ScoreService
                 GROUP BY question_id
             SQL;
 
+
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('question_id', 'questionId');
         $rsm->addScalarResult('score', 'score');
@@ -533,33 +563,42 @@ class ScoreService
 
     public function getExternallyVerifiedScoreArray(Assessment $assessment): array
     {
+        $dsommId = Constants::DSOMM_ID;
         $verifiedScoreByQuestion = $this->getExternallyVerifiedScoresQuery();
-
+        $streamQuestionCountQuery = <<<SQL
+            SELECT stream_id, COUNT(DISTINCT question_id) as stream_question_count
+            FROM question_fully_joined
+            GROUP BY stream_id
+        SQL;
         $sql = /* @lang SQL */
             <<<SQL
-                SELECT name, short_name, AVG(score) as averageScore
+        SELECT name, short_name, AVG(score) as averageScore
+        FROM (
+            SELECT stream_name, name, short_name, SUM(score) as score, bf_order, p_order
+            FROM (
+                SELECT name, short_name, stream_name, score, bf_order, p_order, V1.activity_id
                 FROM (
-                    SELECT stream_name, name, short_name, SUM(score) as score, bf_order, p_order
-                    FROM (
-                        SELECT name, short_name, stream_name, score, bf_order, p_order, V1.activity_id
-                        FROM (
-                            SELECT bf_name as name, 
-                                   short_name,
-                                   stream_name, 
-                                   SUM(IF(score, score, 0)) / COALESCE(question_count, 1) as score,
-                                   bf_order, 
-                                   p_order, 
-                                   T1.activity_id
-                            FROM ($verifiedScoreByQuestion) AS T1
-                                LEFT JOIN activity_question_count AS T2 ON T1.activity_id = T2.activity_id
-                            GROUP BY T1.activity_id
-                            ) as V1
-                        ) as W1
-                    GROUP BY name, short_name, stream_name
-                    ) as W2
-                GROUP BY name, short_name
-                ORDER BY bf_order, p_order
-            SQL;
+                    SELECT bf_name as name, 
+                           short_name,
+                           stream_name, 
+                           SUM(IF(score, score, 0)) / COALESCE(
+                              CASE WHEN metamodel_id = {$dsommId} THEN stream_question_count ELSE question_count END, 
+                              1) as score,
+                           bf_order, 
+                           p_order, 
+                           T1.activity_id,
+                           metamodel_id
+                    FROM ($verifiedScoreByQuestion) AS T1
+                        LEFT JOIN activity_question_count AS T2 ON T1.activity_id = T2.activity_id
+                        LEFT JOIN ($streamQuestionCountQuery) AS T3 ON T1.stream_id = T3.stream_id
+                    GROUP BY T1.activity_id
+                    ) as V1
+                ) as W1
+            GROUP BY name, short_name, stream_name
+            ) as W2
+        GROUP BY name, short_name
+        ORDER BY bf_order, p_order
+    SQL;
 
         $metamodel = $assessment->getProject()->getMetamodel();
 
@@ -599,54 +638,56 @@ class ScoreService
 
     private function getExternallyVerifiedScoresQuery(): string
     {
-        return <<<SQL
-                SELECT bf_name,
-                       bf_order,
-                       short_name,
-                       p_order,
-                       stream_name,
-                       activity_id,
-                       question_fully_joined.question_id,
-                       S1.score as score,
-                       S1.date as date,
-                       S1.answer_id as answer_id
-                FROM question_fully_joined
-                LEFT JOIN (
-                            SELECT 
-                                assessment_stream.id,
-                                assessment_stream.stream_id,
-                                assessment_answer.question_id as question_id,
-                                answer.value as score,
-                                externalValidation.completed_at as date,
-                                IF(answer.id, answer.id, null) as answer_id
-                            FROM assessment_stream
-                            JOIN stage as externalValidation
-                                ON externalValidation.id =
-                                   (
-                                       SELECT max(stage.id) as validationId
-                                       FROM stage
-                                                JOIN validation on stage.id = validation.id
-                                                JOIN user on stage.submitted_by_id = user.id
-                                       WHERE (stage.assessment_stream_id = assessment_stream.id and
-                                              validation.status = 2 and
-                                              JSON_UNQUOTE(user.roles) LIKE '%ROLE_AUDITOR%')
-                                   )
-                            JOIN stage
-                                ON stage.id =
-                                   (
-                                       SELECT max(stage.id) as id
-                                       FROM stage
-                                       WHERE (stage.assessment_stream_id = assessment_stream.id and
-                                              stage.dType = 'evaluation' and
-                                              stage.id < externalValidation.id)
-                                   )
-                            LEFT JOIN assessment_answer ON  assessment_answer.stage_id=stage.id and assessment_answer.deleted_at is null
-                            LEFT JOIN answer ON assessment_answer.answer_id = answer.id
-                            WHERE assessment_stream.assessment_id = :assessment
-                            ) as S1 on S1.question_id = question_fully_joined.question_id
-                WHERE metamodel_id = :metamodel
-                GROUP BY question_fully_joined.question_id
-                ORDER BY bf_order, p_order, stream_name
-            SQL;
+        return  <<<SQL
+        SELECT bf_name,
+               bf_order,
+               short_name,
+               p_order,
+               stream_name,
+               activity_id,
+               question_fully_joined.question_id,
+               question_fully_joined.stream_id,
+               metamodel_id,
+               S1.score as score,
+               S1.date as date,
+               S1.answer_id as answer_id
+        FROM question_fully_joined
+        LEFT JOIN (
+                    SELECT 
+                        assessment_stream.id,
+                        assessment_stream.stream_id,
+                        assessment_answer.question_id as question_id,
+                        answer.value as score,
+                        externalValidation.completed_at as date,
+                        IF(answer.id, answer.id, null) as answer_id
+                    FROM assessment_stream
+                    JOIN stage as externalValidation
+                        ON externalValidation.id =
+                           (
+                               SELECT max(stage.id) as validationId
+                               FROM stage
+                                        JOIN validation on stage.id = validation.id
+                                        JOIN user on stage.submitted_by_id = user.id
+                               WHERE (stage.assessment_stream_id = assessment_stream.id and
+                                      validation.status = 2 and
+                                      JSON_UNQUOTE(user.roles) LIKE '%ROLE_AUDITOR%')
+                           )
+                    JOIN stage
+                        ON stage.id =
+                           (
+                               SELECT max(stage.id) as id
+                               FROM stage
+                               WHERE (stage.assessment_stream_id = assessment_stream.id and
+                                      stage.dType = 'evaluation' and
+                                      stage.id < externalValidation.id)
+                           )
+                    LEFT JOIN assessment_answer ON  assessment_answer.stage_id=stage.id and assessment_answer.deleted_at is null
+                    LEFT JOIN answer ON assessment_answer.answer_id = answer.id
+                    WHERE assessment_stream.assessment_id = :assessment
+                    ) as S1 on S1.question_id = question_fully_joined.question_id
+        WHERE metamodel_id = :metamodel
+        GROUP BY question_fully_joined.question_id
+        ORDER BY bf_order, p_order, stream_name
+    SQL;
     }
 }

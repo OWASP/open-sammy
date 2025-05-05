@@ -26,13 +26,78 @@ class ScoreServiceTest extends AbstractKernelTestCase
 {
     private ScoreService $scoreService;
     private Metamodel $sammMetamodel;
+    private Metamodel $dsommMetamodel;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->scoreService = self::getContainer()->get(ScoreService::class);
         $this->sammMetamodel = $this->entityManager->getReference(Metamodel::class, 1);
+        $this->dsommMetamodel = $this->entityManager->getReference(Metamodel::class, 2);
     }
+
+    private function getDSOMMAssessmentWithAnswers()
+    {
+        /** @var QuestionRepository $questionRepository */
+        $questionRepository = self::getContainer()->get(QuestionRepository::class);
+
+        /** @var Question $dsommQuestion1 */
+        $dsommQuestion1 = $questionRepository->findOneBy(['externalId' => 'f6f7737f-25a9-4317-8de2-09bf59f29b5b']); // Build 1st question
+        /** @var Question $dsommQuestion2 */
+        $dsommQuestion2 = $questionRepository->findOneBy(['externalId' => 'a340f46b-6360-4cb8-847b-a0d3483d09d3']);// Build 2nd question
+        /** @var Question $dsommQuestion3 */
+        $dsommQuestion3 = $questionRepository->findOneBy(['externalId' => 'f3c4971e-9f4d-4e59-8ed0-f0bdb6262477']); // Build 3rd question
+        /** @var Question $dsommQuestion4 */
+        $dsommQuestion4 = $questionRepository->findOneBy(['externalId' => '2858ac12-0179-40d9-9acf-1b839c030473']); // Build 4th question
+        /** @var Question $dsommQuestion5 */
+        $dsommQuestion5 = $questionRepository->findOneBy(['externalId' => '9f107927-61e9-4574-85ad-3f2b4bca8665']); // Build 5th question
+        /** @var Question $dsommQuestion6 */
+        $dsommQuestion6 = $questionRepository->findOneBy(['externalId' => '5786959d-0c6f-46a6-8e1c-a32ff1a50222']); // Build 6th question
+
+        ($assessment = new Assessment())->setProject((new Project())->setMetamodel($this->dsommMetamodel));
+        ($assessmentStream1 = new AssessmentStream())->setAssessment($assessment)->setStream($dsommQuestion1->getActivity()->getStream()); // Build
+        ($evaluation = new Evaluation())->setAssessmentStream($assessmentStream1)
+            ->addStageAssessmentAnswer(
+                (new AssessmentAnswer())->setStage($evaluation)
+                    ->setAnswer($dsommQuestion1->getAnswerSet()->getAnswerSetAnswers()[0])->setQuestion($dsommQuestion1)
+                    ->setType(\App\Enum\AssessmentAnswerType::CURRENT)
+            )->addStageAssessmentAnswer(
+                (new AssessmentAnswer())->setStage($evaluation)
+                    ->setAnswer($dsommQuestion2->getAnswerSet()->getAnswerSetAnswers()[0])->setQuestion($dsommQuestion2)
+                    ->setType(\App\Enum\AssessmentAnswerType::CURRENT)
+            )->addStageAssessmentAnswer(
+                (new AssessmentAnswer())->setStage($evaluation)
+                    ->setAnswer($dsommQuestion3->getAnswerSet()->getAnswerSetAnswers()[0])->setQuestion($dsommQuestion3)
+                    ->setType(\App\Enum\AssessmentAnswerType::CURRENT)
+            )->addStageAssessmentAnswer(
+                (new AssessmentAnswer())->setStage($evaluation)
+                    ->setAnswer($dsommQuestion4->getAnswerSet()->getAnswerSetAnswers()[0])->setQuestion($dsommQuestion4)
+                    ->setType(\App\Enum\AssessmentAnswerType::CURRENT)
+            )->addStageAssessmentAnswer(
+                (new AssessmentAnswer())->setStage($evaluation)
+                    ->setAnswer($dsommQuestion5->getAnswerSet()->getAnswerSetAnswers()[0])->setQuestion($dsommQuestion5)
+                    ->setType(\App\Enum\AssessmentAnswerType::CURRENT)
+            )->addStageAssessmentAnswer(
+                (new AssessmentAnswer())->setStage($evaluation)
+                    ->setAnswer($dsommQuestion6->getAnswerSet()->getAnswerSetAnswers()[1])->setQuestion($dsommQuestion6)
+                    ->setType(\App\Enum\AssessmentAnswerType::CURRENT)
+            );
+
+        ($validation = new Validation())->setStatus(ValidationStatus::ACCEPTED)->setAssessmentStream($assessmentStream1)->setCompletedAt(new \DateTime());
+        ($improvement = new Improvement())->setAssessmentStream($assessmentStream1)
+            ->addStageAssessmentAnswer(
+                (new AssessmentAnswer())->setStage($improvement)
+                    ->setAnswer($dsommQuestion6->getAnswerSet()->getAnswerSetAnswers()[0])->setQuestion($dsommQuestion6)
+                    ->setType(\App\Enum\AssessmentAnswerType::DESIRED)
+            );
+        $assessmentStream1->addAssessmentStreamStage($evaluation)->addAssessmentStreamStage($validation)->addAssessmentStreamStage($improvement);
+        $assessmentStream1->setStatus(\App\Enum\AssessmentStatus::IN_IMPROVEMENT);
+
+        $assessment->addAssessmentAssessmentStream($assessmentStream1);
+
+        return $assessment;
+    }
+
 
     private function getAssessmentWithAnswers()
     {
@@ -140,6 +205,25 @@ class ScoreServiceTest extends AbstractKernelTestCase
             ->addAssessmentAssessmentStream($assessmentStream4);
 
         return $assessment;
+    }
+
+    // I am reusing things here as the whole data setup is rather complicated
+    public function testCurrentAndProjectedScoresDSOMM()
+    {
+        $assessment = $this->getDSOMMAssessmentWithAnswers();
+        $this->entityManager->persist($assessment);
+        $this->entityManager->flush();
+        $scores = $this->scoreService->getScoresByAssessment($assessment);
+        self::assertEquals(0.83, number_format($scores['securityPractice']['B'], 2));
+        self::assertEquals(0, $scores['securityPractice']['D']);
+        self::assertEquals(0, $scores['securityPractice']['PM']);
+        self::assertEquals(0, $scores['securityPractice']['EAG']);
+        self::assertEquals(0.28, number_format($scores['businessFunction']['Build and Deployment'], 2));
+        self::assertEquals(0.0, $scores['businessFunction']['Implementation']);
+        $scores = $this->scoreService->getProjectedScoresByAssessment($assessment);
+        self::assertEquals(1.00, number_format($scores['securityPractice']['B'], 2));
+        self::assertEquals(0.33, number_format($scores['businessFunction']['Build and Deployment'], 2));
+        self::assertEquals(0.0, $scores['businessFunction']['Implementation']);
     }
 
     // I am reusing things here as the whole data setup is rather complicated

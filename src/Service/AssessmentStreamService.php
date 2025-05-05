@@ -11,6 +11,7 @@ use App\Entity\User;
 use App\Enum\AssessmentStatus;
 use App\Repository\AssessmentStreamRepository;
 use App\Repository\ImprovementRepository;
+use App\Utils\Constants;
 use App\Voter\AssessmentStreamVoterHelper;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -140,7 +141,12 @@ class AssessmentStreamService
             $assessmentAnswers = $this->assessmentAnswersService->getLatestAssessmentStreamAnswers($assessmentStream);
             foreach ($assessmentAnswers as $assessmentAnswer) {
                 $activity = $assessmentAnswer->getQuestion()->getActivity();
-                $score += $assessmentAnswer->getAnswer()->getValue() / sizeof($activity->getActivityQuestions());
+                if ($assessmentStream->getStream()->getPractice()->getBusinessFunction()->getMetamodel()->getId() === Constants::SAMM_ID) {
+                    $score += $assessmentAnswer->getAnswer()->getValue() / sizeof($activity->getActivityQuestions());
+                } else {
+                    $allActivities = sizeof($assessmentStream->getStream()->getStreamActivities());
+                    $score += $assessmentAnswer->getAnswer()->getValue() / $allActivities;
+                }
             }
         }
 

@@ -9,6 +9,9 @@
         {% set templateName = assessmentStream.assessment.project.templateProject ? assessmentStream.assessment.project.templateProject.name : null %}
         {# question \App\Entity\Question #}
         {% for question in questions %}
+            {% if assessmentStream.stream.practice.businessFunction.metamodel.id == constant('App\\Utils\\Constants::DSOMM_ID') %}
+                <input id="questionCount" hidden value="{{ questions|length }}"></input>
+            {% endif %}
             {% set answers = question.getAnswers() %}
             <div class="d-flex" data-question="{{ question.id }}">
                 {% set required = 'required' %}
