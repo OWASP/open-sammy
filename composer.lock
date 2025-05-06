@@ -966,16 +966,16 @@
         },
         {
             "name": "doctrine/doctrine-migrations-bundle",
-            "version": "3.4.1",
+            "version": "3.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineMigrationsBundle.git",
-                "reference": "e858ce0f5c12b266dce7dce24834448355155da7"
+                "reference": "5a6ac7120c2924c4c070a869d08b11ccf9e277b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineMigrationsBundle/zipball/e858ce0f5c12b266dce7dce24834448355155da7",
-                "reference": "e858ce0f5c12b266dce7dce24834448355155da7",
+                "url": "https://api.github.com/repos/doctrine/DoctrineMigrationsBundle/zipball/5a6ac7120c2924c4c070a869d08b11ccf9e277b9",
+                "reference": "5a6ac7120c2924c4c070a869d08b11ccf9e277b9",
                 "shasum": ""
             },
             "require": {
@@ -989,7 +989,6 @@
                 "composer/semver": "^3.0",
                 "doctrine/coding-standard": "^12",
                 "doctrine/orm": "^2.6 || ^3",
-                "doctrine/persistence": "^2.0 || ^3",
                 "phpstan/phpstan": "^1.4 || ^2",
                 "phpstan/phpstan-deprecation-rules": "^1 || ^2",
                 "phpstan/phpstan-phpunit": "^1 || ^2",
@@ -1032,7 +1031,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/DoctrineMigrationsBundle/issues",
-                "source": "https://github.com/doctrine/DoctrineMigrationsBundle/tree/3.4.1"
+                "source": "https://github.com/doctrine/DoctrineMigrationsBundle/tree/3.4.2"
             },
             "funding": [
                 {
@@ -1048,7 +1047,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-01-27T22:48:22+00:00"
+            "time": "2025-03-11T17:36:26+00:00"
         },
         {
             "name": "doctrine/event-manager",
@@ -2850,16 +2849,16 @@
         },
         {
             "name": "league/commonmark",
-            "version": "2.6.2",
+            "version": "2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/commonmark.git",
-                "reference": "06c3b0bf2540338094575612f4a1778d0d2d5e94"
+                "reference": "6fbb36d44824ed4091adbcf4c7d4a3923cdb3405"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/06c3b0bf2540338094575612f4a1778d0d2d5e94",
-                "reference": "06c3b0bf2540338094575612f4a1778d0d2d5e94",
+                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/6fbb36d44824ed4091adbcf4c7d4a3923cdb3405",
+                "reference": "6fbb36d44824ed4091adbcf4c7d4a3923cdb3405",
                 "shasum": ""
             },
             "require": {
@@ -2896,7 +2895,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "2.7-dev"
+                    "dev-main": "2.8-dev"
                 }
             },
             "autoload": {
@@ -2953,7 +2952,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-04-18T21:09:27+00:00"
+            "time": "2025-05-05T12:20:28+00:00"
         },
         {
             "name": "league/config",
