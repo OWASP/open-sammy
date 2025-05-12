@@ -122,9 +122,9 @@ i18next-icu@2.*:
   integrity sha512-x+j7kd5nDJCfbU53uwsMfXD7ALPu5uv0bqjAMQ5nVvXRoj1L7gkmswKtM3XDWYo4YUHf1jznlhSdPyy0xEwU+Q==
 
 i18next@25.*:
-  version "25.0.1"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-25.0.1.tgz#8870939202299a29fe2c99ea913f8e72db535e31"
-  integrity sha512-8S8PyZbrymJZn3DaN70/34JYWNhsqrU6yA4MuzcygJBv+41dgNMocEA8h+kV1P7MCc1ll03lOTOIXE7mpNCicw==
+  version "25.1.2"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-25.1.2.tgz#c667b814ed1b4dbea76976a4c746a87922ac6ceb"
+  integrity sha512-SP63m8LzdjkrAjruH7SCI3ndPSgjt4/wX7ouUUOzCW/eY+HzlIo19IQSfYA9X3qRiRP1SYtaTsg/Oz/PGsfD8w==
   dependencies:
     "@babel/runtime" "^7.26.10"
 
