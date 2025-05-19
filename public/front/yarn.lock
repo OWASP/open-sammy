@@ -57,9 +57,9 @@ chartjs-plugin-datalabels@2.*:
   integrity sha512-14ZU30lH7n89oq+A4bWaJPnAG8a7ZTk7dKf48YAzMvJjQtjrgg5Dpk9f+LbjCF6bpx3RAGTeL13IXpKQYyRvlw==
 
 chartjs-plugin-trendline@2.*:
-  version "2.1.8"
-  resolved "https://registry.yarnpkg.com/chartjs-plugin-trendline/-/chartjs-plugin-trendline-2.1.8.tgz#8ef3fda3dec5fbffeef5681ba5aee99b070053bf"
-  integrity sha512-9Srwnq31iU1/n5AiH3oTPN4+449J+Fp3+GkWnpjoj3WN/ArAWNBKMl06OHan9gV/YNHmnC5pnB7Sjq7yRfv2lw==
+  version "2.1.9"
+  resolved "https://registry.yarnpkg.com/chartjs-plugin-trendline/-/chartjs-plugin-trendline-2.1.9.tgz#7444ffa96c1eba4521340e8fe8e2b6b289bcd699"
+  integrity sha512-6vzl7o2mytprS71yYCn91SZHbq5K8QnMGixz3SORemoAxPwJVTYK8J2ViQ44Hkxf6ld5/GwOtL0eU5k8IywocA==
 
 datatables.net-bs4@1.*:
   version "1.13.11"
