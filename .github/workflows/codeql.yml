@@ -1,4 +1,39 @@
-- name: Initialize CodeQL
-  uses: github/codeql-action/init@v2
-  with:
-    languages: javascript
+on:
+  # Run CodeQL on every push to main or PR targeting main
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+  # Run a weekly scan every Monday at 03:00 UTC
+  schedule:
+    - cron: '0 3 * * 1'
+
+  # Allow manual triggering from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    name: Analyze codebase with CodeQL
+    runs-on: ubuntu-latest
+
+    # Least‑privilege permissions recommended by GitHub
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: javascript   # Change/add languages (e.g., java, python) as needed
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v2
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v2
