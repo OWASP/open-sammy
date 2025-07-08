@@ -13,7 +13,7 @@
     "chartjs-plugin-datalabels": "2.*",
     "chartjs-plugin-trendline": "2.*",
     "datatables.net": "1.*",
-    "datatables.net-bs4": "1.*",
+    "datatables.net-bs4": "2.*",
     "datatables.net-responsive": "3.*",
     "datatables.net-responsive-bs4": "3.*",
     "daterangepicker": "3.*",
