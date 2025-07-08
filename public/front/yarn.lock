@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@babel/runtime@^7.27.1":
+"@babel/runtime@^7.27.6":
   version "7.27.6"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.27.6.tgz#ec4070a04d76bae8ddbb10770ba55714a417b7c6"
   integrity sha512-vbavdySgbTTrmFE+EsiqUTzlOr5bzlnJtUv9PynGCAKvfQqjIXbvFdumPM/GxMDfyuGMJaJAU6TO4zc1Jf1i8Q==
@@ -78,18 +78,18 @@ datatables.net-bs4@^2:
     jquery ">=1.7"
 
 datatables.net-responsive-bs4@3.*:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/datatables.net-responsive-bs4/-/datatables.net-responsive-bs4-3.0.4.tgz#5ab8bdac0b447691b69b25eee828c7185bfc2bbd"
-  integrity sha512-r1LdcvKd2c9kBRMdAfMam45GXEl0D421n2bl8GoQwc0YWtELktdMB+V21nemzCaJT03YLhpsD+g8IGJeLeOi2A==
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/datatables.net-responsive-bs4/-/datatables.net-responsive-bs4-3.0.5.tgz#4be3e8bdd8bd1b5a9e17f071f169824049c8861b"
+  integrity sha512-RP80U3pkzzmQZ2T5zijy/9tSFa0GfLgkG4ks8XLUwrAwPlL4MewgpdLD3oYLHvkNQoEcGydyIyWE71lizXnmNQ==
   dependencies:
     datatables.net-bs4 "^2"
-    datatables.net-responsive "3.0.4"
+    datatables.net-responsive "3.0.5"
     jquery ">=1.7"
 
-datatables.net-responsive@3.*, datatables.net-responsive@3.0.4:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/datatables.net-responsive/-/datatables.net-responsive-3.0.4.tgz#9e8d354f3b4016b60fe0aa588094ef0b31e9c61b"
-  integrity sha512-d1JKaWPRp81xydZrTDqrzGTloXthDtyvwbqiSKYUhDBKWTL4wN5IW5WYr4OBPwu21Ctpi/QgOl7mt9MfyF8KxA==
+datatables.net-responsive@3.*, datatables.net-responsive@3.0.5:
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/datatables.net-responsive/-/datatables.net-responsive-3.0.5.tgz#fdebdd8518de11a085a774b9a8a2f6d2b37d1fd5"
+  integrity sha512-EnDY2OQN+f4XE72J+dajNuJwT78/GnCuuw8ACusrXaF/VpGyFEpBNr1JDzUTBj+cv7KGpDObks8AaL2p/Z2OVg==
   dependencies:
     datatables.net "^2"
     jquery ">=1.7"
@@ -122,11 +122,11 @@ i18next-icu@2.*:
   integrity sha512-x+j7kd5nDJCfbU53uwsMfXD7ALPu5uv0bqjAMQ5nVvXRoj1L7gkmswKtM3XDWYo4YUHf1jznlhSdPyy0xEwU+Q==
 
 i18next@25.*:
-  version "25.2.1"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-25.2.1.tgz#23cf8794904f551f577558d93c84b0fb6cd489a2"
-  integrity sha512-+UoXK5wh+VlE1Zy5p6MjcvctHXAhRwQKCxiJD8noKZzIXmnAX8gdHX5fLPA3MEVxEN4vbZkQFy8N0LyD9tUqPw==
+  version "25.3.1"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-25.3.1.tgz#bfb1cb6ef464a0bc89172c45b1d23c8fa48ba73e"
+  integrity sha512-S4CPAx8LfMOnURnnJa8jFWvur+UX/LWcl6+61p9VV7SK2m0445JeBJ6tLD0D5SR0H29G4PYfWkEhivKG5p4RDg==
   dependencies:
-    "@babel/runtime" "^7.27.1"
+    "@babel/runtime" "^7.27.6"
 
 ionicons-npm@2.*:
   version "2.0.1"
