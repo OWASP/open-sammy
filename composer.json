@@ -28,7 +28,7 @@
     "phpdocumentor/reflection-docblock" : "5.*",
     "phpmailer/phpmailer" : "6.*",
     "phpoffice/phpspreadsheet" : "*",
-    "predis/predis" : "2.*",
+    "predis/predis" : "3.*",
     "scheb/2fa-backup-code" : "7.*",
     "scheb/2fa-bundle" : "7.*",
     "scheb/2fa-google-authenticator" : "7.*",
