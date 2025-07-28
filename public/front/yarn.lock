@@ -30,9 +30,9 @@ block-ui@2.*:
     jquery ">=1.7.x"
 
 bootstrap-table@1.*:
-  version "1.24.1"
-  resolved "https://registry.yarnpkg.com/bootstrap-table/-/bootstrap-table-1.24.1.tgz#8c7aa5aac3a828b9fae56955ba426595739f79fa"
-  integrity sha512-que7o2Z6R0I3cfwfm6qg4XnoUK9A/8162HUErFYg3fGtzjk5OjLJx6Ji9p3oKz+IAIVvBCr9sqMqujEG47k3zA==
+  version "1.24.2"
+  resolved "https://registry.yarnpkg.com/bootstrap-table/-/bootstrap-table-1.24.2.tgz#1d1bc1eb050b697eef5e5c594c13a526f7539990"
+  integrity sha512-h/09vDvypSssCdL9BlLg+o5UWBR5+0DTGZBJkeathz3h/DSbH1A+vunZcatYDFTVsLJiKYiT7o6AjGG8fW+nzA==
 
 bootstrap4-toggle@^3.6:
   version "3.6.1"
