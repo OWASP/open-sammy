@@ -11,6 +11,7 @@ if [ ! -d "private/dsomm" ]; then
 else
   cd private/dsomm
   echo 'Discarding local changes to DSOMM model (if any)...'
+  git config --global --add safe.directory /var/www/private/dsomm
   git checkout $BRANCH
   git checkout -- .
   echo 'Pulling latest changes...'
