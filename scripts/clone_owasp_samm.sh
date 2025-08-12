@@ -11,6 +11,7 @@ if [ ! -d "private/core" ]; then
 else
   cd private/core
   echo 'Discarding local changes to OWASP SAMM model (if any)...'
+  git config --global --add safe.directory /var/www/private/core
   git checkout $BRANCH
   git checkout -- .
   echo 'Pulling latest changes...'
