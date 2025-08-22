@@ -89,3 +89,16 @@ open http://127.0.0.1:8000
 ```bash
 php ./bin/console app:process-mailing
 ```
+
+# DSOMM Support
+We have support for assessments for DSOMM model. By default you will have DSOMM model in your database with the needed things. If you wish you can import custom DSOMM variation. For example you can have model with more/less domains and practices. You can have many DSOMM variations simultaneously. 
+````
+php ./bin/console app:sync-from-dsomm --source="path/to/dsomm-file.yaml"
+````
+Optionally you can pass metamodel ID if you wish to perform updates to existing DSOMM variation
+````
+php ./bin/console app:sync-from-dsomm --source="path/to/dsomm-file.yaml" --metamodel=33
+````
+
+We expect single YAML file with all the data structure as below. By default we will use this file
+https://github.com/devsecopsmaturitymodel/DevSecOps-MaturityModel-data/blob/main/src/assets/YAML/generated/generated.yaml
