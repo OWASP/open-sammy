@@ -13,6 +13,7 @@ use App\Entity\PracticeLevel;
 use App\Entity\Question;
 use App\Entity\Stream;
 use App\Repository\MetamodelRepository;
+use App\Service\MetamodelService;
 use App\Service\Processing\DsommYamlToDbRecordsSyncer;
 use App\Utils\Constants;
 use Doctrine\DBAL\ConnectionException;
@@ -20,27 +21,31 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(name: 'app:sync-from-dsomm')]
 class SyncFromDsommYamlCommand extends Command
 {
     protected static $defaultName = 'app:sync-from-dsomm';
-    private const METAMODEL_COMMAND_PARAMETER_NAME = 'metamodelId';
+    private const METAMODEL_COMMAND_PARAMETER_NAME = 'metamodel';
+    private const SOURCE_YAML_COMMAND_PARAMETER_NAME = 'source';
 
     public function __construct(
         private readonly DsommYamlToDbRecordsSyncer $dbRecordsSyncer,
         private readonly EntityManagerInterface $entityManager,
         private readonly MetamodelRepository $metamodelRepository,
+        private readonly MetamodelService $metamodelService
     ) {
         parent::__construct();
     }
 
     protected function configure(): void
     {
-        $this->addArgument(self::METAMODEL_COMMAND_PARAMETER_NAME, InputArgument::OPTIONAL, 'To which metamodel should this model be linked?');
+        $this->addOption(self::SOURCE_YAML_COMMAND_PARAMETER_NAME, 's', InputOption::VALUE_OPTIONAL, 'Path to YAML source files');
+        $this->addOption(self::METAMODEL_COMMAND_PARAMETER_NAME, 'm', InputOption::VALUE_OPTIONAL, 'To which metamodel should this model be linked?');
+
         $this->setDescription('Sync DSOMM model from YAML files to database');
     }
 
@@ -50,23 +55,30 @@ class SyncFromDsommYamlCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $metamodelId = $input->getArgument(self::METAMODEL_COMMAND_PARAMETER_NAME);
-        $metamodelId = $metamodelId ?? Constants::DSOMM_ID;
-        $metamodelId = (int) $metamodelId;
+        $sourcePath = $input->getOption(self::SOURCE_YAML_COMMAND_PARAMETER_NAME);
+        if ($sourcePath !== null) {
+            $this->dbRecordsSyncer->loadYamlFile($sourcePath);
+        }
 
-        $metamodel = $this->metamodelRepository->find($metamodelId);
+        $metamodelId = $input->getOption(self::METAMODEL_COMMAND_PARAMETER_NAME);
+        if ($metamodelId === null) {
+            $metamodel = $this->metamodelService->createDSOMM();
+        } else {
+            $metamodel = $this->metamodelRepository->find($metamodelId);
+        }
+
         $this->dbRecordsSyncer->setMetamodel($metamodel);
 
         $this->entityManager->getConnection()->beginTransaction();
         try {
-             [$addedBusinessFuncs, $modifiedBusinessFuncs] = $this->dbRecordsSyncer->syncBusinessFunctions();
-             [$addedSecurityPractices, $modifiedSecurityPractices] = $this->dbRecordsSyncer->syncSecurityPractices();
-             [$addedMaturityLevels, $modifiedMaturityLevels] = $this->dbRecordsSyncer->syncMaturityLevels();
-             [$addedStreams, $modifiedStreams] = $this->dbRecordsSyncer->syncStreams();
-             [$addedPracticeLevels, $modifiedPracticeLevels] = $this->dbRecordsSyncer->syncPracticeLevels();
-             [$addedActivities, $modifiedActivities] = $this->dbRecordsSyncer->syncActivities();
-             [$addedAnswerSets, $modifiedAnswerSets] = $this->dbRecordsSyncer->syncAnswerSets();
-             [$addedQuestions, $modifiedQuestions] = $this->dbRecordsSyncer->syncQuestions();
+            [$addedBusinessFuncs, $modifiedBusinessFuncs] = $this->dbRecordsSyncer->syncBusinessFunctions();
+            [$addedSecurityPractices, $modifiedSecurityPractices] = $this->dbRecordsSyncer->syncSecurityPractices();
+            [$addedMaturityLevels, $modifiedMaturityLevels] = $this->dbRecordsSyncer->syncMaturityLevels();
+            [$addedStreams, $modifiedStreams] = $this->dbRecordsSyncer->syncStreams();
+            [$addedPracticeLevels, $modifiedPracticeLevels] = $this->dbRecordsSyncer->syncPracticeLevels();
+            [$addedActivities, $modifiedActivities] = $this->dbRecordsSyncer->syncActivities();
+            [$addedAnswerSets, $modifiedAnswerSets] = $this->dbRecordsSyncer->syncAnswerSets();
+            [$addedQuestions, $modifiedQuestions] = $this->dbRecordsSyncer->syncQuestions();
 
             $this->entityManager->getConnection()->commit();
         } catch (\Throwable $t) {
