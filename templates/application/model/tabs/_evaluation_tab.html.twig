@@ -9,7 +9,7 @@
         {% set templateName = assessmentStream.assessment.project.templateProject ? assessmentStream.assessment.project.templateProject.name : null %}
         {# question \App\Entity\Question #}
         {% for question in questions %}
-            {% if assessmentStream.stream.practice.businessFunction.metamodel.id == constant('App\\Utils\\Constants::DSOMM_ID') %}
+            {% if assessmentStream.stream.practice.businessFunction.metamodel.type == constant('App\\Enum\\MetamodelType::DSOMM') %}
                 <input id="questionCount" hidden value="{{ questions|length }}"></input>
             {% endif %}
             {% set answers = question.getAnswers() %}

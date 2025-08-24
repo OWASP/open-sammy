@@ -68,7 +68,16 @@ class DsommYamlToDbRecordsSyncer extends ModelToDbSyncer
             $this->answerRepository,
             $this->questionRepository,
         );
-        $yamlContent = file_get_contents("{$this->getModelsFolder()}/generated.yaml");
+        $this->loadYamlFile("{$this->getModelsFolder()}/generated.yaml");
+    }
+
+    public function loadYamlFile(string $yamlPath): void
+    {
+        if (!file_exists($yamlPath)) {
+            throw new \InvalidArgumentException("YAML file not found: $yamlPath");
+        }
+
+        $yamlContent = file_get_contents($yamlPath);
         $this->parsedData = Yaml::parse($yamlContent);
     }
 
@@ -153,7 +162,7 @@ class DsommYamlToDbRecordsSyncer extends ModelToDbSyncer
         $added = $modified = 0;
         foreach ($this->practiceApplicableMaturityLevels as $practiceExternalId => $levels) {
             foreach ($levels as $maturityLevelExternalId) {
-                $practiceLevelExternalId = $practiceExternalId."x".$maturityLevelExternalId;
+                $practiceLevelExternalId = $this->getPracticeLevelExternalId($practiceExternalId, $maturityLevelExternalId);
                 $objective = "";
                 $this->practiceLevelExternalIdsByPracticeExternalIdAndLevel[$practiceExternalId][$this->maturityLevelsByExternalIds[$maturityLevelExternalId]] = $practiceLevelExternalId;
                 $entityStatus = $this->syncPracticeLevel($practiceLevelExternalId, $practiceExternalId, $maturityLevelExternalId, $objective);
@@ -232,14 +241,13 @@ class DsommYamlToDbRecordsSyncer extends ModelToDbSyncer
 
         foreach ($this->parsedData as $categoryData) {
             foreach ($categoryData as $streamsData) {
-                $order = 1;
                 foreach ($streamsData as $thirdLevelCategory => $streamData) {
                     $entityStatus = $this->syncQuestion(
-                        $streamData["uuid"],
-                        $streamData["uuid"],
+                        $this->getQuestionExternalId($streamData["uuid"]),
+                        $this->getActivityExternalId($streamData["uuid"]),
                         $thirdLevelCategory,
                         $this->parseQuality($streamData["measure"] ?? ""),
-                        self::ANSWER_SET_EXTERNAL_ID,
+                        $this->getAnswerSetExternalId(),
                         $streamData["level"]
                     );
 
@@ -290,7 +298,7 @@ class DsommYamlToDbRecordsSyncer extends ModelToDbSyncer
                 foreach ($streamsData as $thirdLevelCategory => $streamData) {
                     $streamLevel = $streamData["level"];
                     $entityStatus = $this->syncActivity(
-                        $streamData["uuid"],
+                        $this->getActivityExternalId($streamData["uuid"]),
                         $practiceExternalId,
                         $thirdLevelCategory,
                         $this->cutToFullSentence($streamData["risk"], 255),
@@ -317,7 +325,7 @@ class DsommYamlToDbRecordsSyncer extends ModelToDbSyncer
     public function syncAnswerSets(): array
     {
         $added = $modified = 0;
-        $externalId = self::ANSWER_SET_EXTERNAL_ID;
+        $externalId = $this->getAnswerSetExternalId();
         $answerSetStatus = $this->syncAnswerSet($externalId);
 
         if ($answerSetStatus === ModelEntitySyncEnum::ADDED) {
@@ -329,8 +337,8 @@ class DsommYamlToDbRecordsSyncer extends ModelToDbSyncer
 
         $answers =
             [
-                ["id" => self::ANSWER_NO_EXTERNAL_ID, "order" => 1, "text" => "No", "value" => 0, "weight" => 0],
-                ["id" => self::ANSWER_YES_EXTERNAL_ID, "order" => 0, "text" => "Yes", "value" => 1, "weight" => 1],
+                ["id" => $this->getAnswerNoExternalId(), "order" => 1, "text" => "No", "value" => 0, "weight" => 0],
+                ["id" => $this->getAnswerYesExternalId(), "order" => 0, "text" => "Yes", "value" => 1, "weight" => 1],
             ];
         foreach ($answers as $answerData) {
             $entityStatus = $this->syncAnswer($answerSetEntity, $answerData['order'], $answerData['text'], $answerData['value'], $answerData['weight']);
@@ -348,7 +356,7 @@ class DsommYamlToDbRecordsSyncer extends ModelToDbSyncer
     {
         $added = $modified = 0;
         foreach ($this->maturityLevels as $level => $description) {
-            $externalId = self::MATURITY_LEVEL_EXTERNAL_ID_PREFIX.$level;
+            $externalId = $this->getMaturityLevelExternalId($level);
             $entityStatus = $this->syncMaturityLevel($externalId, $level, $description);
             if ($entityStatus === ModelEntitySyncEnum::ADDED) {
                 ++$added;
@@ -372,7 +380,42 @@ class DsommYamlToDbRecordsSyncer extends ModelToDbSyncer
 
     private function generateExternalId(string $name): string
     {
-        return 'dsomm-'.strtolower(str_replace(' ', '-', $name));
+        return $this->metamodel->getId() . 'dsomm-'.strtolower(str_replace(' ', '-', $name));
+    }
+
+    private function getMaturityLevelExternalId(int $level): string
+    {
+        return $this->metamodel->getId() . self::MATURITY_LEVEL_EXTERNAL_ID_PREFIX.$level;
+    }
+
+    private function getAnswerSetExternalId(): string
+    {
+        return $this->metamodel->getId() . self::ANSWER_SET_EXTERNAL_ID;
+    }
+
+    private function getActivityExternalId(string $uuid): string
+    {
+        return $this->metamodel->getId() . $uuid;
+    }
+
+    private function getQuestionExternalId(string $uuid): string
+    {
+        return $this->getActivityExternalId($uuid);
+    }
+
+    private function getAnswerNoExternalId(): string
+    {
+        return $this->metamodel->getId() . self::ANSWER_NO_EXTERNAL_ID;
+    }
+
+    private function getAnswerYesExternalId(): string
+    {
+        return $this->metamodel->getId() . self::ANSWER_YES_EXTERNAL_ID;
+    }
+
+    private function getPracticeLevelExternalId(string $practiceExternalId, string $maturityLevelExternalId): string
+    {
+        return $practiceExternalId."x".$maturityLevelExternalId;
     }
 
     private function generateShortName(string $name): string

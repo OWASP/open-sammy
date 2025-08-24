@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Entity\Abstraction\AbstractEntity;
+use App\Enum\MetamodelType;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -50,6 +51,9 @@ class Metamodel extends AbstractEntity
 
     #[ORM\Column(name: "`default`", type: Types::BOOLEAN)]
     protected bool $default = false;
+
+    #[ORM\Column(name: "`type`", type: Types::INTEGER, enumType: MetamodelType::class)]
+    protected MetamodelType $type = MetamodelType::SAMM;
 
 
 
@@ -93,6 +97,18 @@ class Metamodel extends AbstractEntity
         return $this->default;
     }
 
+    public function setType(MetamodelType $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getType(): MetamodelType
+    {
+        return $this->type;
+    }
+
 
     /**
      * This method is a copy constructor that will return a copy object (except for the id field)
@@ -107,6 +123,7 @@ class Metamodel extends AbstractEntity
         $clone->setName($this->name);
         $clone->setMaxScore($this->maxScore);
         $clone->setDefault($this->default);
+        $clone->setType($this->type);
 // #BlockStart number=165 id=_19_0_3_40d01a2_1677917556636_72280_4869_#_2
 
 // #BlockEnd number=165
@@ -130,6 +147,7 @@ class Metamodel extends AbstractEntity
     public static function loadValidatorMetadata(ClassMetadata $metadata)
     {
         $metadata->addPropertyConstraint('name', new Assert\NotBlank());
+        $metadata->addPropertyConstraint('type', new Assert\NotNull());
 
 // #BlockStart number=166 id=_19_0_3_40d01a2_1677917556636_72280_4869_#_3
 //        to remove constraint use following code
@@ -145,6 +163,7 @@ class Metamodel extends AbstractEntity
             "_metamodel.id",
             "_metamodel.name",
             "_metamodel.maxScore",
+            "_metamodel.type",
         ];
     }
 
@@ -155,7 +174,7 @@ class Metamodel extends AbstractEntity
 
         ];
     }
-    
+
     #[Ignore]
     public function getModifiableFields(): array
     {
@@ -163,6 +182,7 @@ class Metamodel extends AbstractEntity
             "name",
             "maxScore",
             "default",
+            "type",
         ];
     }
 

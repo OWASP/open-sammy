@@ -6,7 +6,6 @@ namespace App\Utils;
 
 class Constants
 {
-
     public const DEFAULT_CACHE_EXPIRATION = 3600;
 
     public const SCORE_KEY_PREFIX_VALIDATED = 'validated-assessment-scores-';
@@ -18,7 +17,6 @@ class Constants
     public const CSRF_SAFE_METHODS = ['HEAD', 'OPTIONS'];
 
     public const SAMM_ID = 1;
-    public const DSOMM_ID = 2;
 
     public static function getMaxScore(int $metamodelId): int
     {

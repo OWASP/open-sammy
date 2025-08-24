@@ -42,17 +42,17 @@ class ScoreServiceTest extends AbstractKernelTestCase
         $questionRepository = self::getContainer()->get(QuestionRepository::class);
 
         /** @var Question $dsommQuestion1 */
-        $dsommQuestion1 = $questionRepository->findOneBy(['externalId' => 'f6f7737f-25a9-4317-8de2-09bf59f29b5b']); // Build 1st question
+        $dsommQuestion1 = $questionRepository->findOneBy(['externalId' => '2f6f7737f-25a9-4317-8de2-09bf59f29b5b']); // Build 1st question
         /** @var Question $dsommQuestion2 */
-        $dsommQuestion2 = $questionRepository->findOneBy(['externalId' => 'a340f46b-6360-4cb8-847b-a0d3483d09d3']);// Build 2nd question
+        $dsommQuestion2 = $questionRepository->findOneBy(['externalId' => '2a340f46b-6360-4cb8-847b-a0d3483d09d3']);// Build 2nd question
         /** @var Question $dsommQuestion3 */
-        $dsommQuestion3 = $questionRepository->findOneBy(['externalId' => 'f3c4971e-9f4d-4e59-8ed0-f0bdb6262477']); // Build 3rd question
+        $dsommQuestion3 = $questionRepository->findOneBy(['externalId' => '2f3c4971e-9f4d-4e59-8ed0-f0bdb6262477']); // Build 3rd question
         /** @var Question $dsommQuestion4 */
-        $dsommQuestion4 = $questionRepository->findOneBy(['externalId' => '2858ac12-0179-40d9-9acf-1b839c030473']); // Build 4th question
+        $dsommQuestion4 = $questionRepository->findOneBy(['externalId' => '22858ac12-0179-40d9-9acf-1b839c030473']); // Build 4th question
         /** @var Question $dsommQuestion5 */
-        $dsommQuestion5 = $questionRepository->findOneBy(['externalId' => '9f107927-61e9-4574-85ad-3f2b4bca8665']); // Build 5th question
+        $dsommQuestion5 = $questionRepository->findOneBy(['externalId' => '29f107927-61e9-4574-85ad-3f2b4bca8665']); // Build 5th question
         /** @var Question $dsommQuestion6 */
-        $dsommQuestion6 = $questionRepository->findOneBy(['externalId' => '5786959d-0c6f-46a6-8e1c-a32ff1a50222']); // Build 6th question
+        $dsommQuestion6 = $questionRepository->findOneBy(['externalId' => '25786959d-0c6f-46a6-8e1c-a32ff1a50222']); // Build 6th question
 
         ($assessment = new Assessment())->setProject((new Project())->setMetamodel($this->dsommMetamodel));
         ($assessmentStream1 = new AssessmentStream())->setAssessment($assessment)->setStream($dsommQuestion1->getActivity()->getStream()); // Build

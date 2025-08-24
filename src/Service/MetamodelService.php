@@ -12,9 +12,11 @@ use App\Entity\Metamodel;
 use App\Entity\Practice;
 use App\Entity\Question;
 use App\Entity\Stream;
+use App\Enum\MetamodelType;
 use App\Repository\BusinessFunctionRepository;
 use App\Repository\MetamodelRepository;
 use App\Utils\Constants;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheException;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Contracts\Cache\ItemInterface;
@@ -22,10 +24,13 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 class MetamodelService
 {
+    private const DSOMM_MAX_SCORE = 1;
+
     public function __construct(
         private readonly BusinessFunctionRepository $businessFunctionRepository,
         private readonly MetamodelRepository $metamodelRepository,
-        private readonly TagAwareCacheInterface $redisCache
+        private readonly TagAwareCacheInterface $redisCache,
+        private readonly EntityManagerInterface $entityManager
     ) {
     }
 
@@ -191,5 +196,18 @@ class MetamodelService
         $intersectIds = array_intersect(...$idArrays);
 
         return array_filter($first, fn(AbstractEntity $element) => in_array($element->getId(), $intersectIds, true));
+    }
+    
+    public function createDSOMM(): Metamodel
+    {
+        $metamodel = new Metamodel();
+        $metamodel->setName("DSOMM variation");
+        $metamodel->setMaxScore(self::DSOMM_MAX_SCORE);
+        $metamodel->setType(MetamodelType::DSOMM);
+
+        $this->entityManager->persist($metamodel);
+        $this->entityManager->flush();
+
+        return $metamodel;
     }
 }

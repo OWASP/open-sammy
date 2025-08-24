@@ -30,7 +30,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class ModelToDbSyncer
 {
-    private Metamodel $metamodel;
+    protected Metamodel $metamodel;
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
@@ -116,7 +116,6 @@ class ModelToDbSyncer
         $newBusinessFunctionId = $businessFunctionExternalId;
         if ($this->arePropertiesDifferent($oldBusinessFunctionId, $newBusinessFunctionId)) {
             $oldBusinessFunctionEntity = $practiceEntity->getBusinessFunction();
-//            $businessFunction =
             $practiceEntity->setBusinessFunction($this->businessFunctionRepository->findOneBy(criteria: ['externalId' => $newBusinessFunctionId], metamodel: $this->metamodel));
             $isModified = $oldBusinessFunctionEntity !== $practiceEntity->getBusinessFunction();
         }

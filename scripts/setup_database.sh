@@ -25,5 +25,5 @@ echo "clone or pull DSOMM model repository"
 sh ./scripts/clone_dsomm.sh --env=$environ
 
 echo "Syncing from DSOMM repo..."
-php bin/console app:sync-from-dsomm 2 --env=$environ
+php bin/console app:sync-from-dsomm --metamodel=2 --env=$environ
 
