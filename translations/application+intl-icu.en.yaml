@@ -427,6 +427,7 @@ application :
       audit : External assessment
 
   assessment :
+    question_description: Click to view the full description
     demo : You are filling out an anonymous SAMM assessment. Sign in to get access to the full-fledged version of SAMMY.
     start : Switch to this scope
     start_stream : Start

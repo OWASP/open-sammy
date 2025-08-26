@@ -26,7 +26,8 @@
                             <div class="row">
                                 <div class="col-sm-12 card-header">
                             <span id="activity" class="mr-2" data-toggle="modal" data-target="#activityModal{{ question.activity.id }}">
-                                <a href="#" class="btn btn-xs btn-primary" data-toggle="tooltip" data-placement="top" title="{{ question.activity.shortDescription }}">
+                                <a href="#" class="btn btn-xs btn-primary" data-toggle="tooltip" data-placement="top"
+                                   title="{{ 'application.assessment.question_description'|trans({}, 'application') }}">
                                     <i class="fa fa-question-circle"></i>
                                 </a>
                             </span>
@@ -69,7 +70,7 @@
                                                         </div>
                                                     {% endif %}
                                                     <div class="col-12 pr-5">
-                                                        {{ quality }}
+                                                        {{ quality | markdown_to_html }}
                                                     </div>
                                                 </label>
                                             </li>

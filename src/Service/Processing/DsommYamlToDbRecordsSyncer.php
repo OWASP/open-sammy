@@ -208,27 +208,16 @@ class DsommYamlToDbRecordsSyncer extends ModelToDbSyncer
         return [$added, $modified];
     }
 
-    private function parseQuality(array|string $quality)
+    private function parseQuality(array|string $quality): array
     {
         $result = [];
-
         if (is_string($quality)) {
-            if (strpos($quality, "\n") !== false) {
-                $lines = explode("\n", $quality);
-                foreach ($lines as $line) {
-                    $line = trim($line);
-                    if (strpos($line, '- ') === 0) {
-                        $line = substr($line, 2);
-                    }
-
-                    if (empty($line)) {
-                        continue;
-                    }
-
-                    $result[] = $line;
-                }
-            } else {
-                $result[] = $quality;
+            // Replace newlines with space, trim, and add as single string
+            $result[] = trim(str_replace("\n", " ", $quality));
+        } elseif (is_array($quality)) {
+            // Process each element individually, replacing newlines, trimming, and adding to $result
+            foreach ($quality as $item) {
+                $result[] = trim(str_replace("\n", " ", $item));
             }
         }
 
@@ -297,13 +286,16 @@ class DsommYamlToDbRecordsSyncer extends ModelToDbSyncer
                 $practiceExternalId = $this->generateExternalId($secondLevelCategory);
                 foreach ($streamsData as $thirdLevelCategory => $streamData) {
                     $streamLevel = $streamData["level"];
+                    $description = "*Description*: ".($streamData["description"] ?? "")
+                        ."\n\n"."*Risk*: ".($streamData['risk'] ?? "")
+                        ."\n\n"."*Measure*: ".($streamData['measure'] ?? "");
                     $entityStatus = $this->syncActivity(
                         $this->getActivityExternalId($streamData["uuid"]),
                         $practiceExternalId,
                         $thirdLevelCategory,
                         $this->cutToFullSentence($streamData["risk"], 255),
-                        $streamData["description"] ?? "",
-                        $streamData["description"] ?? "",
+                        $description,
+                        $description,
                         $this->practiceLevelExternalIdsByPracticeExternalIdAndLevel[$practiceExternalId][$streamLevel]
                     );
 
@@ -380,22 +372,22 @@ class DsommYamlToDbRecordsSyncer extends ModelToDbSyncer
 
     private function generateExternalId(string $name): string
     {
-        return $this->metamodel->getId() . 'dsomm-'.strtolower(str_replace(' ', '-', $name));
+        return $this->metamodel->getId().'dsomm-'.strtolower(str_replace(' ', '-', $name));
     }
 
     private function getMaturityLevelExternalId(int $level): string
     {
-        return $this->metamodel->getId() . self::MATURITY_LEVEL_EXTERNAL_ID_PREFIX.$level;
+        return $this->metamodel->getId().self::MATURITY_LEVEL_EXTERNAL_ID_PREFIX.$level;
     }
 
     private function getAnswerSetExternalId(): string
     {
-        return $this->metamodel->getId() . self::ANSWER_SET_EXTERNAL_ID;
+        return $this->metamodel->getId().self::ANSWER_SET_EXTERNAL_ID;
     }
 
     private function getActivityExternalId(string $uuid): string
     {
-        return $this->metamodel->getId() . $uuid;
+        return $this->metamodel->getId().$uuid;
     }
 
     private function getQuestionExternalId(string $uuid): string
@@ -405,12 +397,12 @@ class DsommYamlToDbRecordsSyncer extends ModelToDbSyncer
 
     private function getAnswerNoExternalId(): string
     {
-        return $this->metamodel->getId() . self::ANSWER_NO_EXTERNAL_ID;
+        return $this->metamodel->getId().self::ANSWER_NO_EXTERNAL_ID;
     }
 
     private function getAnswerYesExternalId(): string
     {
-        return $this->metamodel->getId() . self::ANSWER_YES_EXTERNAL_ID;
+        return $this->metamodel->getId().self::ANSWER_YES_EXTERNAL_ID;
     }
 
     private function getPracticeLevelExternalId(string $practiceExternalId, string $maturityLevelExternalId): string
