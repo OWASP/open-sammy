@@ -2,6 +2,9 @@ services:
   app:
     build:
       context: .
+      args :
+        PUID : ${PUID:-1000}
+        PGID : ${PGID:-1000}
     restart: unless-stopped
     environment :
       - DATABASE_URL=mysql://sammy:sammy@db:3306/sammy?serverVersion=11.3.2-MariaDB

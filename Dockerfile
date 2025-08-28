@@ -4,6 +4,9 @@ RUN cd /build/public/shared && yarn install && cd /build/public/front && yarn in
 
 FROM php:8.3-apache
 
+ARG PUID=1000
+ARG PGID=1000
+
 # persistent / runtime deps
 RUN set -eux; \
   apt-get update; \
@@ -18,6 +21,9 @@ RUN sed -i 's/# en_GB.UTF-8 UTF-8/en_GB.UTF-8 UTF-8/' /etc/locale.gen && \
   sed -i 's/# nl_BE.UTF-8 UTF-8/nl_BE.UTF-8 UTF-8/' /etc/locale.gen && \
   sed -i 's/# fr_BE.UTF-8 UTF-8/fr_BE.UTF-8 UTF-8/' /etc/locale.gen && \
   locale-gen
+
+RUN groupmod -g ${PGID} www-data && \
+    usermod -u ${PUID} -g ${PGID} www-data
 
 # build and configure php/apache modules
 RUN set -eux; \
@@ -37,7 +43,7 @@ RUN set -eux; \
   { \
   # Find dependencies from PHP extensions (.so files)
   find /usr/local/lib/php/extensions -name "*.so" -exec ldd '{}' ';' 2>/dev/null; \
-  # Find dependencies from executables  
+  # Find dependencies from executables
   find /usr/local -type f -executable -exec ldd '{}' ';' 2>/dev/null; \
   # Find dependencies from PHP binary itself
   ldd /usr/local/bin/php 2>/dev/null || true; \
@@ -66,7 +72,7 @@ RUN a2enmod rewrite ; \
   sed -i 's!ServerSignature On!ServerSignature Off!g' /etc/apache2/conf-enabled/security.conf ; \
   mv /var/www/html /var/www/public
 
-RUN mkdir -p /var/log/cron && chown -R www-data:www-data /var/log/cron
+RUN mkdir -p /var/log/cron /var/www && chown -R www-data:www-data /var/log/cron /var/www
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
@@ -75,11 +81,14 @@ WORKDIR /var/www
 CMD ["start-apache"]
 
 
-COPY . /var/www
-COPY --from=js-build /build/public/shared/dependency /var/www/public/shared/dependency
-COPY --from=js-build /build/public/front/dependency /var/www/public/front/dependency
+COPY --chown=www-data:www-data . /var/www
+COPY --chown=www-data:www-data --from=js-build /build/public/shared/dependency /var/www/public/shared/dependency
+COPY --chown=www-data:www-data --from=js-build /build/public/front/dependency /var/www/public/front/dependency
 WORKDIR /var/www
-RUN APP_ENV=prod APP_DEBUG=0 COMPOSER_ALLOW_SUPERUSER=1 COMPOSER_MEMORY_LIMIT=-1 composer install --prefer-dist --no-ansi --no-dev --no-interaction --no-progress --no-scripts --optimize-autoloader
+
+RUN apt-get update && apt-get install -y sudo && rm -rf /var/lib/apt/lists/*
+
+RUN sudo -u www-data APP_ENV=prod APP_DEBUG=0 COMPOSER_ALLOW_SUPERUSER=1 COMPOSER_MEMORY_LIMIT=-1 composer install --prefer-dist --no-ansi --no-dev --no-interaction --no-progress --no-scripts --optimize-autoloader
 RUN rm -rf /root/.composer
 RUN rm -rf /var/www/docker-build
 
