@@ -76,8 +76,8 @@ open http://127.0.0.1:8000
         PHPMAILER_SMTP_USERNAME=
         PHPMAILER_SMTP_PASSWORD=
         PHPMAILER_SMTP_DEFAULT_SENDER=
-        PHPMAILER_SMTP_USE_AUTH=true
-        PHPMAILER_SMTP_DEFAULT_ENCRYPTION=ssl
+        PHPMAILER_SMTP_USE_AUTH=
+        PHPMAILER_SMTP_DEFAULT_ENCRYPTION=
       ```
         - for `compose.yaml` under `app` section under `environment`
       ```yaml
@@ -86,8 +86,8 @@ open http://127.0.0.1:8000
       - PHPMAILER_SMTP_USERNAME=
       - PHPMAILER_SMTP_PASSWORD=
       - PHPMAILER_SMTP_DEFAULT_SENDER=
-      - PHPMAILER_SMTP_USE_AUTH=true
-      - PHPMAILER_SMTP_DEFAULT_ENCRYPTION=ssl
+      - PHPMAILER_SMTP_USE_AUTH=
+      - PHPMAILER_SMTP_DEFAULT_ENCRYPTION=
       ```
 * If you are using docker you do not have to do anything else. There is a cronjob which runs every 2 minutes.
 * If you are running this locally you have to run following command manually:
