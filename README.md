@@ -68,13 +68,16 @@ open http://127.0.0.1:8000
 # Mailing
 
 * If you want to use mailing feature you have to add following to your `.env.local` or `compose.yaml` file. All fields are Required. Also, server
-  should use proper SSL.
+  should use proper SSL by default.
     - for `.env.lcoal`
       ```dotenv
-      PHPMAILER_SMTP_HOST=
-      PHPMAILER_SMTP_PORT=
-      PHPMAILER_SMTP_USERNAME=
-      PHPMAILER_SMTP_PASSWORD=
+        PHPMAILER_SMTP_HOST=
+        PHPMAILER_SMTP_PORT=
+        PHPMAILER_SMTP_USERNAME=
+        PHPMAILER_SMTP_PASSWORD=
+        PHPMAILER_SMTP_DEFAULT_SENDER=
+        PHPMAILER_SMTP_USE_AUTH=
+        PHPMAILER_SMTP_DEFAULT_ENCRYPTION=
       ```
         - for `compose.yaml` under `app` section under `environment`
       ```yaml
@@ -82,6 +85,9 @@ open http://127.0.0.1:8000
       - PHPMAILER_SMTP_PORT=
       - PHPMAILER_SMTP_USERNAME=
       - PHPMAILER_SMTP_PASSWORD=
+      - PHPMAILER_SMTP_DEFAULT_SENDER=
+      - PHPMAILER_SMTP_USE_AUTH=
+      - PHPMAILER_SMTP_DEFAULT_ENCRYPTION=
       ```
 * If you are using docker you do not have to do anything else. There is a cronjob which runs every 2 minutes.
 * If you are running this locally you have to run following command manually:
