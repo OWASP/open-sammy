@@ -185,7 +185,7 @@ class MailingService
         string $subject,
         string $message,
         ?string $attachmentFile = null,
-        string $from = 'sammy@codific.com',
+        ?string $from = null,
         string $fromName = 'SAMMY Mailing System'
     ): bool {
         try {
@@ -193,10 +193,14 @@ class MailingService
             $mail->isSMTP();
             $mail->Host = $this->parameterBag->get('phpmailer.smtp.host');
             $mail->Port = (int) $this->parameterBag->get('phpmailer.smtp.port');
-            $mail->SMTPAuth = true;
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            $mail->SMTPAuth = (bool) $this->parameterBag->get('phpmailer.smtp.use.auth');;
+            $mail->SMTPSecure = $this->parameterBag->get('phpmailer.smtp.default.encryption');
             $mail->Username = $this->parameterBag->get('phpmailer.smtp.username');
             $mail->Password = $this->parameterBag->get('phpmailer.smtp.password');
+
+            if ($from === null) {
+                $from = $this->parameterBag->get('phpmailer.smtp.default.sender');
+            }
 
             $mail->setFrom($from, $fromName);
             $mail->addAddress($to, $toName);
