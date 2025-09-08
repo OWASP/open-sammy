@@ -32,9 +32,7 @@ class ProcessMailingCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $host = $this->parameterBag->get('phpmailer.smtp.host');
         $port = (int) $this->parameterBag->get('phpmailer.smtp.port');
-        $username = $this->parameterBag->get('phpmailer.smtp.username');
-        $password = $this->parameterBag->get('phpmailer.smtp.password');
-        if ($host === '' || $port === 0 || $username === '' || $password === '') {
+        if ($host === '' || $port === 0) {
             $io->text('[' . date('c') . '] Mail cron - Missing mail configuration');
 
             return Command::SUCCESS;
