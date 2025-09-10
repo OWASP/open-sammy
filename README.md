@@ -61,7 +61,9 @@ docker compose up -d db redis
 docker compose up -d --build app
 # 3. sync SAMM model. Note, this step syncs the SAMM model from the core GitHub repo. You only have to run this the very first time and upon every SAMM model update.
 docker compose exec app ./scripts/sync_samm.sh
-# 4. Enjoy
+# 4. sync DSOMM model. Note, this step syncs the DSOMM model from the core GitHub repo. You only have to run this the very first time and upon every DSOMM model update.
+docker compose exec app ./scripts/sync_dsomm.sh
+# 5. Enjoy
 open http://127.0.0.1:8000
 ```
 
