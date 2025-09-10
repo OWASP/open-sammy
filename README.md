@@ -80,6 +80,7 @@ open http://127.0.0.1:8000
         PHPMAILER_SMTP_DEFAULT_SENDER=
         PHPMAILER_SMTP_USE_AUTH=
         PHPMAILER_SMTP_DEFAULT_ENCRYPTION=
+        PHPMAILER_SMTP_AUTO_TLS=
       ```
         - for `compose.yaml` under `app` section under `environment`
       ```yaml
