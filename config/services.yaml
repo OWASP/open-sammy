@@ -21,6 +21,7 @@ parameters :
   phpmailer.smtp.default.sender : '%env(resolve:PHPMAILER_SMTP_DEFAULT_SENDER)%'
   phpmailer.smtp.use.auth : '%env(resolve:PHPMAILER_SMTP_USE_AUTH)%'
   phpmailer.smtp.default.encryption : '%env(resolve:PHPMAILER_SMTP_DEFAULT_ENCRYPTION)%'
+  phpmailer.smtp.auto.tls : '%env(resolve:PHPMAILER_SMTP_AUTO_TLS)%'
 
 services :
   # default configuration for services in *this* file
