@@ -193,11 +193,11 @@ class MailingService
             $mail->isSMTP();
             $mail->Host = $this->parameterBag->get('phpmailer.smtp.host');
             $mail->Port = (int) $this->parameterBag->get('phpmailer.smtp.port');
-            $mail->SMTPAuth = (bool) $this->parameterBag->get('phpmailer.smtp.use.auth');;
+            $mail->SMTPAuth = $this->parameterBag->get('phpmailer.smtp.use.auth');;
             $mail->SMTPSecure = $this->parameterBag->get('phpmailer.smtp.default.encryption');
             $mail->Username = $this->parameterBag->get('phpmailer.smtp.username');
             $mail->Password = $this->parameterBag->get('phpmailer.smtp.password');
-            $mail->SMTPAutoTLS = (bool) $this->parameterBag->get('phpmailer.smtp.auto.tls');
+            $mail->SMTPAutoTLS = $this->parameterBag->get('phpmailer.smtp.auto.tls');
 
             if ($from === null) {
                 $from = $this->parameterBag->get('phpmailer.smtp.default.sender');
