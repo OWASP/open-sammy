@@ -11,6 +11,10 @@ fi
 
 chown -R www-data:www-data /var/www/var
 
+cat > /etc/environment << EOF
+DATABASE_URL=${DATABASE_URL}
+EOF
+
 shopt -u nocasematch
 
 service cron start

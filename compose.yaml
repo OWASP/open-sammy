@@ -11,6 +11,7 @@ services:
       - REDIS_HOST=redis
     volumes :
       - ./logs:/var/www/var/log
+      - ./logs/cron:/var/log/cron
       - app_data:/var/www/private
     ports :
       - 8000:80
