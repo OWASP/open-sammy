@@ -5,7 +5,7 @@
 # / / / / ,-- DAY OF WEEK
 #/ / / / /
 HOME=/var/www
-*/2 * * * * root su -s /bin/bash -c '/usr/local/bin/php /var/www/bin/console app:process-mailing >> /var/log/cron/cron.log' www-data
+*/2 * * * * root su -s /bin/bash -c '/usr/local/bin/php /var/www/bin/console app:process-mailing >> /var/log/cron/cron.log 2>&1' www-data
 
 
 #preserve empty line at end!!!
