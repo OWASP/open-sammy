@@ -82,6 +82,7 @@ CMD ["start-apache"]
 
 
 COPY --chown=www-data:www-data . /var/www
+COPY --chown=www-data:www-data . /var/www/private
 COPY --chown=www-data:www-data --from=js-build /build/public/shared/dependency /var/www/public/shared/dependency
 COPY --chown=www-data:www-data --from=js-build /build/public/front/dependency /var/www/public/front/dependency
 WORKDIR /var/www
