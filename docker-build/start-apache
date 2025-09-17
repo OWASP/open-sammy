@@ -10,6 +10,7 @@ if [[ -f "$SYMFONY_CONSOLE" ]]; then
 fi
 
 chown -R www-data:www-data /var/www/var
+chown -R www-data:www-data /var/www/private
 
 cat > /etc/environment << EOF
 DATABASE_URL=${DATABASE_URL}
