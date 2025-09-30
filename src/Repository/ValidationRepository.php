@@ -16,7 +16,7 @@ namespace App\Repository;
 
 use App\Entity\Validation;
 use App\Repository\Abstraction\AbstractRepository;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**

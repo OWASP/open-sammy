@@ -20,7 +20,7 @@ use App\Entity\User;
 use App\Interface\EntityInterface;
 use App\Pagination\Paginator;
 use App\Repository\Abstraction\AbstractRepository;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**

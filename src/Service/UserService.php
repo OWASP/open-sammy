@@ -13,14 +13,11 @@ use App\Entity\User;
 use App\Enum\MailTemplateType;
 use App\Enum\Role;
 use App\Exception\BadGroupForUserSuppliedException;
-use App\Exception\InvalidUserDataException;
 use App\Repository\GroupRepository;
 use App\Repository\GroupUserRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\ORMException;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Doctrine\ORM\Exception\ORMException;
 
 class UserService
 {

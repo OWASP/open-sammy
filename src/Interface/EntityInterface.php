@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Interface;
 
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 
 interface EntityInterface
 {

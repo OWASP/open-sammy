@@ -6,27 +6,17 @@ namespace App\EventSubscriber;
 
 use App\Service\SanitizerService;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
-use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
 
 #[AsDoctrineListener(event: Events::prePersist)]
 #[AsDoctrineListener(event: Events::preUpdate)]
-class EntityPreUpdateSubscriber implements EventSubscriber
+class EntityPreUpdateSubscriber
 {
     public function __construct(private readonly SanitizerService $sanitizeService)
     {
     }
-
-    public function getSubscribedEvents(): array
-    {
-        return [
-            Events::preUpdate,
-            Events::prePersist,
-        ];
-    }
-
     public function prePersist(PrePersistEventArgs $args): void
     {
         $entity = $args->getObject();
@@ -37,7 +27,6 @@ class EntityPreUpdateSubscriber implements EventSubscriber
             $entity->{'set'.ucfirst($field)}($sanitizedValue); /* @phpstan-ignore-line */
         }
     }
-
     public function preUpdate(PreUpdateEventArgs $args): void
     {
         $entity = $args->getObject();

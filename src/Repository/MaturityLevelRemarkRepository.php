@@ -18,7 +18,7 @@ use App\Entity\MaturityLevelRemark;
 use App\Entity\Remark;
 use App\Interface\EntityInterface;
 use App\Repository\Abstraction\AbstractRepository;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
