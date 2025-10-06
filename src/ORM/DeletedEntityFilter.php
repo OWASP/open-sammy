@@ -10,12 +10,7 @@ use Doctrine\ORM\Query\Filter\SQLFilter;
 
 class DeletedEntityFilter extends SQLFilter
 {
-    /**
-     * @param string $targetTableAlias
-     *
-     * @return string
-     */
-    public function addFilterConstraint(ClassMetadata $targetEntity, $targetTableAlias)
+    public function addFilterConstraint(ClassMetadata $targetEntity, string $targetTableAlias): string
     {
         if (!$targetEntity->reflClass->implementsInterface(EntityInterface::class)) {
             return '';

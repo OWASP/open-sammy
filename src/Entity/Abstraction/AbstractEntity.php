@@ -6,9 +6,9 @@ namespace App\Entity\Abstraction;
 
 use App\Interface\EntityInterface;
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 
 abstract class AbstractEntity implements EntityInterface
 {

@@ -11,15 +11,14 @@ use App\Repository\AssessmentRepository;
 use App\Repository\GroupProjectRepository;
 use App\Service\ProjectService;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Exception\ORMException;
 use JetBrains\PhpStorm\NoReturn;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ProjectSubscriber implements EventSubscriberInterface
 {
@@ -72,7 +71,7 @@ class ProjectSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      * @throws \Exception
      */
     #[NoReturn]

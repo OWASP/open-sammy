@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\EventListener;
 
 use App\Entity\User;
+use App\Enum\MailTemplateType;
 use App\Service\MailingService;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PostUpdateEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 
 class ChangedPasswordListener
@@ -24,11 +25,11 @@ class ChangedPasswordListener
     }
 
     /** @phpstan-ignore-next-line TODO: FIX THIS */
-    public function postUpdate(User $user, LifecycleEventArgs $args): void
+    public function postUpdate(User $user, PostUpdateEventArgs $args): void
     {
         if ($this->user === $user) {
             $this->user = null;
-            $this->mailingService->add(\App\Enum\MailTemplateType::CHANGED_PASSWORD, $user);
+            $this->mailingService->add(MailTemplateType::CHANGED_PASSWORD, $user);
         }
     }
 }

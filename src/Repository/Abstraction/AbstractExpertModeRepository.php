@@ -10,7 +10,7 @@ abstract class AbstractExpertModeRepository extends AbstractRepository
 {
     abstract protected function getFromMetamodelService();
 
-    public function findOneBy(array $criteria, ?array $orderBy = null, bool $expertMode = false)
+    public function findOneBy(array $criteria, ?array $orderBy = null, bool $expertMode = false): ?object
     {
         $rawResult = parent::findOneBy($criteria, $orderBy);
 

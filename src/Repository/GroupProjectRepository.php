@@ -19,7 +19,7 @@ use App\Entity\GroupProject;
 use App\Entity\Project;
 use App\Interface\EntityInterface;
 use App\Repository\Abstraction\AbstractRepository;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**

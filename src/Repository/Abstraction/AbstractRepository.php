@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace App\Repository\Abstraction;
 
+use App\Entity\Abstraction\AbstractEntity;
 use App\Interface\EntityInterface;
 use App\Pagination\Paginator;
-use App\Repository\AbstractEntity;
 use App\Util\AbstractRepositoryParameters;
 use App\Util\RepositoryParameters;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\Query\Parameter;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -215,7 +217,7 @@ abstract class AbstractRepository extends ServiceEntityRepository
         $reflection = $this->getClassMetadata()->newInstance();
         $qb = $this->createQueryBuilder($reflection->getAliasName());
         $qb->where($reflection->getAliasName().' in (:inCollection)')
-            ->setParameters(['inCollection' => $inCollection]);
+            ->setParameters(new ArrayCollection([new Parameter('inCollection', $inCollection)]));
 
         return $qb->getQuery()->getResult();
     }

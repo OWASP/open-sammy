@@ -27,7 +27,7 @@ class BusinessFunctionRepository extends AbstractRepository
     /**
      * @throws \Exception
      */
-    public function findOneBy(array $criteria, ?array $orderBy = null, bool $expertMode = false, ?Metamodel $metamodel = null)
+    public function findOneBy(array $criteria, ?array $orderBy = null, bool $expertMode = false, ?Metamodel $metamodel = null): ?object
     {
         if ($metamodel === null && $expertMode === false) {
             throw new \Exception('You must either provide a metamodel, or enable expert mode');

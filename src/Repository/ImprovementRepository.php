@@ -17,7 +17,7 @@ namespace App\Repository;
 use App\Entity\AssessmentStream;
 use App\Entity\Improvement;
 use App\Repository\Abstraction\AbstractRepository;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**

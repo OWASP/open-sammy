@@ -42,7 +42,6 @@ class Assessment extends AbstractEntity
 {
 
     #[ORM\OneToOne(targetEntity: Project::class, cascade: ["persist"], fetch: "EAGER", mappedBy: "assessment")]
-    #[ORM\JoinColumn(onDelete: "SET NULL")]
     #[MaxDepth(1)]
     protected ?Project $project = null;
 
