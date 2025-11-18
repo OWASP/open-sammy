@@ -128,7 +128,7 @@ class AssignmentRepository extends AbstractRepository
             ->addSelect('stage')
             ->join(AssessmentStream::class, 'assessmentStream', Join::WITH, 'stage.assessmentStream = assessmentStream')
             ->join(Assessment::class, 'assessment', Join::WITH, 'assessmentStream.assessment = assessment')
-            ->join(Project::class, 'project', Join::WITH, 'assessment.project = project')
+            ->join(Project::class, 'project', Join::WITH, 'project.assessment = assessment')
             ->where('project = :project')->setParameter('project', $project)
             ->andWhere('assignment.user = :user')->setParameter('user', $user)
             ->andWhere('assessmentStream.status != :archived')->setParameter('archived', \App\Enum\AssessmentStatus::ARCHIVED)

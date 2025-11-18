@@ -21,6 +21,7 @@ use App\Entity\Stage;
 use App\Interface\EntityInterface;
 use App\Repository\Abstraction\AbstractRepository;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -68,7 +69,8 @@ class AssessmentRepository extends AbstractRepository
             ->addSelect('stage')
             ->leftJoin('stage.stageAssessmentAnswers', 'assessmentAnswer')
             ->addSelect('assessmentAnswer')
-            ->where('assessment.project = :project')
+            ->join(Project::class, 'project', Join::WITH, 'project.assessment = assessment')
+            ->where('project = :project')
             ->setParameter('project', $project);
 
         return $qb->getQuery()->getOneOrNullResult();
