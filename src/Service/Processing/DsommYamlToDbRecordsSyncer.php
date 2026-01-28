@@ -68,7 +68,7 @@ class DsommYamlToDbRecordsSyncer extends ModelToDbSyncer
             $this->answerRepository,
             $this->questionRepository,
         );
-        $this->loadYamlFile("{$this->getModelsFolder()}/generated.yaml");
+        $this->loadYamlFile("{$this->getModelsFolder()}/model.yaml");
     }
 
     public function loadYamlFile(string $yamlPath): void
@@ -78,7 +78,7 @@ class DsommYamlToDbRecordsSyncer extends ModelToDbSyncer
         }
 
         $yamlContent = file_get_contents($yamlPath);
-        $this->parsedData = Yaml::parse($yamlContent);
+        $this->parsedData = Yaml::parse($this->getModelDocument($yamlContent));
     }
 
     /**
@@ -364,10 +364,14 @@ class DsommYamlToDbRecordsSyncer extends ModelToDbSyncer
         return [$added, $modified];
     }
 
+    private function getModelDocument(string $yamlContent): string
+    {
+        return preg_split('/^(-{3}|\.{3})$/m', $yamlContent, -1, PREG_SPLIT_NO_EMPTY)[1];
+    }
 
     private function getModelsFolder(): string
     {
-        return "{$this->parameterBag->get('kernel.project_dir')}/private/dsomm/src/assets/YAML/generated";
+        return "{$this->parameterBag->get('kernel.project_dir')}/private/dsomm/generated";
     }
 
     private function generateExternalId(string $name): string
