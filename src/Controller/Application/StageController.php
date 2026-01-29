@@ -67,16 +67,19 @@ class StageController extends AbstractController
         $currentAssignment,
         AssignmentService $assignmentService
     ): ?array {
+        $status = null;
         if ($assignedUser instanceof User &&
             ($this->isGranted('ROLE_MANAGER') || ($user->getId() === $assignedUser->getId() && $currentAssignment?->getUser() === null)) &&
             ($currentAssignment?->getUser()->getId() !== $assignedUser->getId())) {
             $assignmentService->deleteStageAssignments($stage);
             $assignmentService->addAssignment(new Assignment(), $stage, $assignedUser, $user);
-        } else {
+            $status = ['status' => 'ok'];
+        } elseif($assignedUser === null) {
             $this->deleteAssignment($stage, $assignmentService);
+            $status = ['status' => 'ok'];
         }
 
-        return ['status' => 'ok'];
+        return $status;
     }
 
     #[Route('/deleteAssignment/{stage}', name: 'deleteAssignment', requirements: ['assignment' => "\d+"], methods: ['POST'])]
