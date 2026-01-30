@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 
+#[ORM\MappedSuperclass]
 abstract class AbstractEntity implements EntityInterface
 {
     #[Id, ORM\GeneratedValue(strategy: 'AUTO')]

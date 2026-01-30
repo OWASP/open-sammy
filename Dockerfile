@@ -2,7 +2,7 @@ FROM node:alpine AS js-build
 COPY . /build
 RUN cd /build/public/shared && yarn install && cd /build/public/front && yarn install
 
-FROM php:8.3-apache
+FROM php:8.4-apache
 
 ARG PUID=1000
 ARG PGID=1000
