@@ -73,7 +73,9 @@ class StageController extends AbstractController
             ($currentAssignment?->getUser()->getId() !== $assignedUser->getId())) {
             $assignmentService->deleteStageAssignments($stage);
             $assignmentService->addAssignment(new Assignment(), $stage, $assignedUser, $user);
-
+            $status = ['status' => 'ok'];
+        } elseif($this->isGranted('ROLE_MANAGER') && $assignedUser === null) {
+            $this->deleteAssignment($stage, $assignmentService);
             $status = ['status' => 'ok'];
         }
 
@@ -120,6 +122,8 @@ class StageController extends AbstractController
         $results = [];
 
         if ($this->isGranted('ROLE_MANAGER')) {
+            $results[] = ['value' => -1, 'text' => " ____ "];
+
             $usersWithAccess = $userService->getUsersWithProjectAccess($project, $neededRole);
         } else {
             // You can only assign yourself if you're not manager
