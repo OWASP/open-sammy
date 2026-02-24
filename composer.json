@@ -19,7 +19,7 @@
     "doctrine/doctrine-bundle": "2.16.2",
     "doctrine/doctrine-migrations-bundle": "3.4.2",
     "doctrine/migrations": "3.9.4",
-    "doctrine/orm": "3.5.2",
+    "doctrine/orm": "3.5.7",
     "egulias/email-validator": "4.*",
     "endroid/qr-code-bundle": "5.*",
     "google/apiclient": "2.*",
