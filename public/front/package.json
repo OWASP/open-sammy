@@ -11,7 +11,7 @@
     "bootstrap4-toggle": "^3.6",
     "chart.js": "^4",
     "chartjs-plugin-datalabels": "2.*",
-    "chartjs-plugin-trendline": "2.*",
+    "chartjs-plugin-trendline": "3.*",
     "datatables.net": "1.*",
     "datatables.net-bs4": "1.*",
     "datatables.net-responsive": "3.*",
