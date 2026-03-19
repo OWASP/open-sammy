@@ -1,0 +1,1 @@
+Identifies which framework was used for this assessment, enabling the .samm format to be used for other frameworks besides OWASP SAMM
