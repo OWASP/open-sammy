@@ -7,6 +7,7 @@ namespace App\Service;
 use App\Entity\Assessment;
 use App\Entity\AssessmentAnswer;
 use App\Entity\AssessmentStream;
+use App\Entity\Evaluation;
 use App\Entity\Remark;
 use App\Entity\Validation;
 use App\Exception\SammExportValidationException;
@@ -104,17 +105,21 @@ class SammExportService
             $aStream = $a->getAssessmentStream()->getStream();
             $bStream = $b->getAssessmentStream()->getStream();
 
-            $aKey = $aStream->getPractice()->getBusinessFunction()->getOrder() * 100000
-                + $aStream->getPractice()->getOrder() * 10000
-                + $aStream->getOrder() * 1000
-                + ($a->getQuestion()->getActivity()->getPracticeLevel()?->getMaturityLevel()?->getLevel() ?? 0) * 10
-                + $a->getQuestion()->getOrder();
+            $aKey = (int) (
+                $aStream->getPractice()->getBusinessFunction()->getOrder()
+                . $aStream->getPractice()->getOrder()
+                . $aStream->getOrder()
+                . ($a->getQuestion()->getActivity()->getPracticeLevel()?->getMaturityLevel()?->getLevel() ?? 0)
+                . $a->getQuestion()->getOrder()
+            );
 
-            $bKey = $bStream->getPractice()->getBusinessFunction()->getOrder() * 100000
-                + $bStream->getPractice()->getOrder() * 10000
-                + $bStream->getOrder() * 1000
-                + ($b->getQuestion()->getActivity()->getPracticeLevel()?->getMaturityLevel()?->getLevel() ?? 0) * 10
-                + $b->getQuestion()->getOrder();
+            $bKey = (int) (
+                $bStream->getPractice()->getBusinessFunction()->getOrder()
+                . $bStream->getPractice()->getOrder()
+                . $bStream->getOrder()
+                . ($b->getQuestion()->getActivity()->getPracticeLevel()?->getMaturityLevel()?->getLevel() ?? 0)
+                . $b->getQuestion()->getOrder()
+            );
 
             return $aKey <=> $bKey;
         });
@@ -155,24 +160,31 @@ class SammExportService
             ];
         }
 
-        // Collect Validation::getComment() as VALIDATION remarks
+        // Collect stage comments (Evaluation::getComment() and Validation::getComment())
         foreach ($assessmentStreams as $assessmentStream) {
-            $validation = $assessmentStream->getLastValidationStage();
-            if ($validation === null) {
-                continue;
-            }
-
-            $comment = $validation->getComment();
-            if ($comment === null || $comment === '') {
-                continue;
-            }
-
             $streamCode = $assessmentStream->getStream()->getNameKey();
 
-            $remarksByStreamCode[$streamCode][] = [
-                'text' => $comment,
-                'type' => 'VALIDATION',
-            ];
+            $validation = $assessmentStream->getLastValidationStage();
+            $validationComment = $validation instanceof Validation ? $validation->getComment() : null;
+
+            if ($validationComment !== null && $validationComment !== '') {
+                // Validation comment supersedes the evaluation draft
+                $remarksByStreamCode[$streamCode][] = [
+                    'text' => $validationComment,
+                    'type' => 'VALIDATION',
+                ];
+            } else {
+                // Fall back to evaluation draft comment
+                $evaluation = $assessmentStream->getLastEvaluationStage();
+                $evaluationComment = $evaluation instanceof Evaluation ? $evaluation->getComment() : null;
+
+                if ($evaluationComment !== null && $evaluationComment !== '') {
+                    $remarksByStreamCode[$streamCode][] = [
+                        'text' => $evaluationComment,
+                        'type' => 'VALIDATION',
+                    ];
+                }
+            }
         }
 
         if (count($remarksByStreamCode) > 0) {
