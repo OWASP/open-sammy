@@ -105,12 +105,17 @@ class SammExportServiceTest extends AbstractKernelTestCase
                 $evaluation->addStageAssessmentAnswer($assessmentAnswer);
             }
 
-            // Add a COMMENT remark on first 2 streams
+            // Add a Remark entity on first 2 streams
             if ($i < 2) {
                 $remark = new Remark();
-                $remark->setText('Evaluation comment for stream ' . $stream->getNameKey());
+                $remark->setText('Remark entity for stream ' . $stream->getNameKey());
                 $remark->setStage($evaluation);
                 $this->entityManager->persist($remark);
+            }
+
+            // Add an evaluation draft comment on fourth stream
+            if ($i === 3) {
+                $evaluation->setComment('Draft evaluation note for stream ' . $stream->getNameKey());
             }
 
             $createdStreams[] = ['stream' => $stream, 'assessmentStream' => $assessmentStream];
@@ -210,6 +215,17 @@ class SammExportServiceTest extends AbstractKernelTestCase
             'text'
         );
         self::assertContains('Validation feedback: verified implementation', $validationTexts);
+
+        // Verify the draft evaluation comment is exported as VALIDATION
+        $fourthStreamCode = $createdStreams[3]['stream']->getNameKey();
+        self::assertArrayHasKey($fourthStreamCode, $remarksExt['assessmentStreamRemarks']);
+        $fourthStreamRemarks = $remarksExt['assessmentStreamRemarks'][$fourthStreamCode];
+        $fourthValidationTexts = array_column(
+            array_filter($fourthStreamRemarks, fn($r) => $r['type'] === 'VALIDATION'),
+            'text'
+        );
+        self::assertNotEmpty($fourthValidationTexts, 'Draft evaluation comment should be exported as VALIDATION');
+        self::assertStringContainsString('Draft evaluation note', $fourthValidationTexts[0]);
 
         // Output path for user reference
         echo "\n\nExported .samm file: {$filePath}\n";
