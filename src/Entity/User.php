@@ -90,10 +90,6 @@ class User extends AbstractEntity implements BackupCodeInterface, PasswordResetI
     protected ?string $salt = "";
 
     #[Ignore]
-    #[ORM\Column(name: "`failed_logins`", type: Types::INTEGER)]
-    protected int $failedLogins = 0;
-
-    #[Ignore]
     #[ORM\Column(name: "`secret_key`", type: Types::STRING, nullable: true)]
     protected ?string $secretKey = "";
 
@@ -342,18 +338,6 @@ class User extends AbstractEntity implements BackupCodeInterface, PasswordResetI
         return $this->salt;
     }
 
-    public function setFailedLogins(int $failedLogins): self
-    {
-        $this->failedLogins = $failedLogins;
-
-        return $this;
-    }
-
-    public function getFailedLogins(): int
-    {
-        return $this->failedLogins;
-    }
-
     /**
      * Erase credentials
      * @inheritDoc
@@ -549,7 +533,6 @@ class User extends AbstractEntity implements BackupCodeInterface, PasswordResetI
         return [
             "password",
             "salt",
-            "failedLogins",
             "secretKey",
             "trustedVersion",
             "backupCodes",

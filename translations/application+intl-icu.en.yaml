@@ -103,6 +103,8 @@ application :
     login_title : Welcome to SAMMY
     login_credentials : Please enter your login credentials
     login_invalid_credentials : Your login credentials could not be validated
+    too_many_login_attempts : Too many login attempts. Please try again in {seconds, plural, one {# second} other {# seconds}}.
+    back_to_login : Back to login
     forgot_password : I forgot my password
     signin_with_gitlab : Sign in with your GitLab account
     signin_with_github : Sign in with your GitHub account

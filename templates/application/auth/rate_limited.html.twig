@@ -1,0 +1,20 @@
+{% extends 'application/base_login.html.twig' %}
+
+{% block title %}{{ 'application.general.login_title'|trans({}, 'application') }}{% endblock %}
+
+{% block body %}
+    <div class="d-flex align-items-center justify-content-center h-100">
+        <div class="col-lg-8 col-xl-4">
+            <div class="card mb-0">
+                <div class="card-body">
+                    <div class="alert alert-danger text-center">
+                        {{ 'application.general.too_many_login_attempts'|trans({'%seconds%': retry_after}, 'application') }}
+                    </div>
+                    <div class="text-center mt-3">
+                        <a href="{{ path('app_login_login') }}">{{ 'application.general.back_to_login'|trans({}, 'application') }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
