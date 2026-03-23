@@ -6,9 +6,11 @@ namespace App\Controller\Application;
 
 use App\Entity\Project;
 use App\Repository\BusinessFunctionRepository;
+use App\Exception\SammExportValidationException;
 use App\Service\Processing\AssessmentExporterService;
 use App\Service\ProjectService;
 use App\Service\ReportingService;
+use App\Service\SammExportService;
 use App\Service\ScoreService;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -112,6 +114,34 @@ class ReportingController extends AbstractController
         $filePath = $assessmentExporterService->getToolbox($assessment, $project);
 
         return $this->file($filePath);
+    }
+
+    #[Route('/export-samm-json', name: 'export_samm_json', methods: ['POST'])]
+    public function exportSammJson(SammExportService $sammExportService, ProjectService $projectService, Request $request): Response
+    {
+        if (!$this->isCsrfTokenValid('export_answers_auth', $request->request->get('token'))) {
+            return $this->safeRedirect($request, 'app_index');
+        }
+
+        $project = $projectService->getCurrentProject();
+        $assessment = $project->getAssessment();
+
+        try {
+            $json = $sammExportService->export($assessment);
+        } catch (SammExportValidationException $e) {
+            $this->addFlash('error', 'Export validation failed: '.implode(', ', $e->getValidationErrors()));
+
+            return $this->safeRedirect($request, 'reporting_index');
+        }
+
+        $frameworkName = $project->getMetamodel()?->getName() ?? 'SAMM';
+        $filename = sprintf('%s_%s_%s.samm.json', $project->getName(), $frameworkName, uniqid());
+
+        return new Response($json, Response::HTTP_OK, [
+            'Content-Type' => 'application/json',
+            'Content-Disposition' => sprintf('attachment; filename="%s"', $filename),
+            'Content-Length' => strlen($json),
+        ]);
     }
 
     #[Route('/overviewPartial/{id}', name: 'overviewPartial', requirements: ['id' => "\d+"], methods: ['GET'])]

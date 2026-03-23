@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/DRaichev/SAMM-Assessment-Format/blob/main/extensions/assessment-stream-remarks.schema.json",
+  "title": "Assessment Stream Remarks Extension",
+  "description": "Schema for the Assessment Stream Remarks extension in SAMM assessment format. This extension provides structured storage for comments, validation remarks, and recommendations associated with assessment streams.",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "const": "Assessment Stream Remarks",
+      "description": "The name of the extension.",
+      "examples": [
+        "Assessment Stream Remarks"
+      ]
+    },
+    "version": {
+      "type": "string",
+      "const": "1.0.0",
+      "description": "The version of the extension.",
+      "examples": [
+        "1.0.0"
+      ]
+    },
+    "assessmentStreamRemarks": {
+      "type": "object",
+      "description": "An object mapping element codes to arrays of remark objects. Each key is an element code in the format 'BusinessFunction-SecurityPractice-Stream' (e.g., G-EG-A).",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "$ref": "#/$defs/remark"
+        },
+        "minItems": 1
+      },
+      "minProperties": 1,
+      "examples": [
+        {
+          "G-EG-A": [
+            {
+              "text": "Initial assessment shows good foundation",
+              "type": "COMMENT"
+            },
+            {
+              "text": "Verified implementation matches documentation",
+              "type": "VALIDATION"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "required": [
+    "name",
+    "version",
+    "assessmentStreamRemarks"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "remark": {
+      "type": "object",
+      "description": "A single remark object containing text and type information.",
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The text content of the remark.",
+          "examples": [
+            "Initial assessment shows good foundation",
+            "Verified implementation matches documentation",
+            "Consider automating the review process"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": ["COMMENT", "VALIDATION", "RECOMMENDATION"],
+          "description": "The type of remark. COMMENT for general observations (multiple allowed per stream), VALIDATION for auditor feedback (one per stream), RECOMMENDATION for improvement suggestions (one per stream).",
+          "examples": [
+            "COMMENT",
+            "VALIDATION",
+            "RECOMMENDATION"
+          ]
+        }
+      },
+      "required": ["text", "type"],
+      "additionalProperties": false
+    }
+  }
+}

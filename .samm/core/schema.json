@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "formatVersion": {
+      "type": "string",
+      "description": "The version of the format.",
+      "examples": [
+        "1.0.0"
+      ]
+    },
+    "assessment": {
+      "type": "object",
+      "description": "An object containing details about the assessment.",
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "The version of the assessment.",
+          "examples": [
+            "1.2.3"
+          ]
+        },
+        "organization": {
+          "type": "string",
+          "description": "The organization conducting the assessment.",
+          "examples": [
+            "Acme Corporation"
+          ]
+        },
+        "scope": {
+          "type": "string",
+          "description": "The scope of the assessment.",
+          "examples": [
+            "Team Coyote"
+          ]
+        },
+        "date": {
+          "type": "string",
+          "description": "The date of the assessment in YYYY-MM-DD format.",
+          "format": "date",
+          "examples": [
+            "2024-07-07"
+          ]
+        },
+        "answers": {
+          "type": "array",
+          "description": "An array of answer objects representing the SAMM answers.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "questionCode": {
+                "type": "string",
+                "description": "The code identifying the question. In the format of 'BusinessFunction-Practice-Stream-Level'.",
+                "examples": [
+                  "G-SM-A-1"
+                ]
+              },
+              "answerScore": {
+                "type": "number",
+                "description": "The score of the answer."
+              }
+            },
+            "required": [
+              "questionCode"
+            ]
+          }
+        }
+      },
+      "required": [
+        "version",
+        "organization",
+        "scope",
+        "date",
+        "answers"
+      ]
+    },
+    "extensions": {
+      "type": "array",
+      "description": "An array of extension objects providing additional details or functionality.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the extension.",
+            "examples": [
+              "verboseQuestion"
+            ]
+          },
+          "version": {
+            "type": "string",
+            "description": "The version of the extension.",
+            "examples": [
+              "1.0.0"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "version"
+        ],
+        "additionalProperties": true
+      }
+    }
+  },
+  "required": [
+    "formatVersion",
+    "assessment"
+  ]
+}
