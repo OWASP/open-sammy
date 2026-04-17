@@ -159,12 +159,12 @@ class UserService
     public function welcomeUser(User $user, MailTemplateType $mailTemplate, bool $flush = false): bool
     {
         $this->resetPasswordService->reset($user, true);
-        $this->mailingService->add($mailTemplate, $user);
+        $sent = $this->mailingService->sendImmediate($mailTemplate, $user);
         if ($flush) {
             $this->entityManager->flush();
         }
 
-        return true;
+        return $sent;
     }
 
 

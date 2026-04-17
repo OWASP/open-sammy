@@ -38,6 +38,12 @@ class MailingService
 
     public function add(MailTemplateType $mailTemplateType, User $user, array $extraPlaceholders = [], string $attachment = ''): void
     {
+        $mailTemplateEntity = $this->resolveTemplate($mailTemplateType);
+        $this->addCustom($user, $mailTemplateEntity, $extraPlaceholders, $attachment);
+    }
+
+    private function resolveTemplate(MailTemplateType $mailTemplateType): ?MailTemplate
+    {
         $mailTemplateEntity = $this->mailTemplateRepository->findOneBy(['type' => $mailTemplateType]);
         if ($mailTemplateEntity === null) {
             $projectRootPath = $this->parameterBag->get('kernel.project_dir');
@@ -56,26 +62,80 @@ class MailingService
                 $this->entityManager->flush();
             }
         }
-        $this->addCustom($user, $mailTemplateEntity, $extraPlaceholders, $attachment);
+
+        return $mailTemplateEntity;
+    }
+
+    /**
+     * Send an email synchronously without queueing its rendered body.
+     * Used for one-shot messages that carry sensitive links (password reset,
+     * welcome). On success, a Mailing row with '[redacted]' as the body is
+     * persisted for audit; the rendered link never touches the DB.
+     */
+    public function sendImmediate(MailTemplateType $mailTemplateType, User $user, array $extraPlaceholders = [], string $attachment = ''): bool
+    {
+        $template = $this->resolveTemplate($mailTemplateType);
+        if ($template === null) {
+            return false;
+        }
+
+        [$subject, $message, $resolvedAttachment] = $this->replacePlaceholders(
+            $template->getSubject(),
+            $template->getMessage(),
+            $user,
+            $extraPlaceholders,
+            $attachment
+        );
+
+        $result = $this->sendMail(
+            $user->getEmail(),
+            "{$user->getName()} {$user->getSurname()}",
+            $subject,
+            $message,
+            $resolvedAttachment !== '' ? $resolvedAttachment : null
+        );
+
+        if ($result === false) {
+            $this->logger->log(LogLevel::ERROR, 'Immediate mail send failed', [
+                'templateType' => $mailTemplateType->value,
+                'userId' => $user->getId(),
+            ]);
+
+            return false;
+        }
+
+        $mailing = $this->buildMailing($user, $template, $subject, '[redacted]', $resolvedAttachment);
+        $mailing->setStatus(\App\Enum\MailingStatus::SENT);
+        $mailing->setSentDate(new \DateTime());
+        $this->entityManager->persist($mailing);
+        $this->entityManager->flush();
+
+        return true;
     }
 
     public function addCustom(User $user, ?MailTemplate $template, array $extraPlaceholders = [], string $attachment = ''): void
     {
+        [$subject, $message, $attachment] = $this->replacePlaceholders($template->getSubject(), $template->getMessage(), $user, $extraPlaceholders, $attachment);
+        $mailing = $this->buildMailing($user, $template, $subject, $message, $attachment);
+        $this->entityManager->persist($mailing);
+        $this->entityManager->flush();
+    }
+
+    private function buildMailing(User $user, ?MailTemplate $template, string $subject, string $message, ?string $attachment): Mailing
+    {
         $mailing = new Mailing();
         $mailing->setEmail($user->getEmail());
-        $isUserAdmin = in_array(Role::ADMINISTRATOR->string(), $user->getRoles(), true);
-        if ($isUserAdmin) {
+        if (in_array(Role::ADMINISTRATOR->string(), $user->getRoles(), true)) {
             $mailing->setUser($user);
         }
         $mailing->setName($user->getName());
         $mailing->setSurname($user->getSurname());
-        [$subject, $message, $attachment] = $this->replacePlaceholders($template->getSubject(), $template->getMessage(), $user, $extraPlaceholders, $attachment);
         $mailing->setSubject($subject);
         $mailing->setMessage($message);
         $mailing->setMailTemplate($template);
         $mailing->setAttachment($attachment);
-        $this->entityManager->persist($mailing);
-        $this->entityManager->flush();
+
+        return $mailing;
     }
 
     private function replacePlaceholders(string $subject, string $message, User $user, array $extraPlaceholders = [], ?string $attachment = null): array
@@ -90,8 +150,9 @@ class MailingService
 
         $subject = str_ireplace($find, $replace, $subject);
         $message = str_ireplace($find, $replace, $message);
-        if (stristr($message, '[link]') !== false && $user->getPasswordResetHash() !== null && (strlen($user->getPasswordResetHash()) > 0)) {
-            $link = $this->urlGenerator->generate($urlName, ['hash' => $user->getPasswordResetHash()], $this->urlGenerator::ABSOLUTE_URL);
+        $plaintextResetToken = $user->getPlaintextPasswordResetHash();
+        if (stristr($message, '[link]') !== false && $plaintextResetToken !== null && $plaintextResetToken !== '') {
+            $link = $this->urlGenerator->generate($urlName, ['hash' => $plaintextResetToken], $this->urlGenerator::ABSOLUTE_URL);
             $message = str_ireplace('[link]', $link, $message);
             $message = str_ireplace('[linkValidity]', $user->getPasswordResetHashExpiration()->format('d-M-Y @ H:i'), $message);
         }

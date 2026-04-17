@@ -175,6 +175,7 @@ application :
     reset_password_help : We will send you the instructions via email
     reset_password_button : Reset password
     reset_password_success : If your username / email was correct, we have sent you a new login link via email.
+    reset_password_send_failed : We could not send the reset email right now. Please try again in a moment.
     password_change_success : Password changed successfully
     register : Register
     register_button : Submit your registration
@@ -307,6 +308,11 @@ application :
     delete_text : Are you sure you would like to delete «{user}»?
     delete_success : «{user}» was deleted successfully
     delete_error : Something went wrong. We could not delete this user.
+    resend_welcome_button : Resend welcome email
+    resend_welcome_text : Resend the welcome email to «{user}»? Any existing password reset link will be invalidated.
+    resend_welcome_confirm : Resend
+    resend_welcome_success : Welcome email was resent to «{user}».
+    resend_welcome_error : We could not resend the welcome email. Please try again later.
     roles_modify_success : Roles were modified successfully
     roles : Roles
     non_admin_role_enum : >-

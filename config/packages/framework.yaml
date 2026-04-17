@@ -35,4 +35,8 @@ framework:
       policy: sliding_window
       limit: 5
       interval: '1 minute'
+    password_reset:
+      policy: sliding_window
+      limit: 5
+      interval: '1 hour'
 

@@ -30,4 +30,15 @@ interface PasswordResetInterface
     public function setPasswordResetHashExpiration(?\DateTime $passwordResetHashExpiration);
 
     public function getPasswordResetHashExpiration(): ?\DateTime;
+
+    /**
+     * Transient, in-memory only. Holds the plaintext token during the request
+     * in which the reset was generated so the mailer can embed it in the link.
+     * The persisted column stores a SHA-256 hash of this value.
+     *
+     * @return mixed
+     */
+    public function setPlaintextPasswordResetHash(?string $plaintext);
+
+    public function getPlaintextPasswordResetHash(): ?string;
 }

@@ -112,6 +112,9 @@ class User extends AbstractEntity implements BackupCodeInterface, PasswordResetI
     #[ORM\Column(name: "`password_reset_hash_expiration`", type: Types::DATETIME_MUTABLE, nullable: true)]
     protected ?\DateTime $passwordResetHashExpiration = null;
 
+    #[Ignore]
+    protected ?string $plaintextPasswordResetHash = null;
+
     #[ORM\OneToMany(mappedBy: "assignedTo", targetEntity: Stage::class, cascade: ["persist"], fetch: "LAZY", orphanRemoval: false)]
     #[ORM\OrderBy(["id" => "ASC"])]
     #[MaxDepth(1)]
@@ -442,6 +445,19 @@ class User extends AbstractEntity implements BackupCodeInterface, PasswordResetI
     public function getPasswordResetHashExpiration(): ?\DateTime
     {
         return $this->passwordResetHashExpiration;
+    }
+
+    public function setPlaintextPasswordResetHash(?string $plaintext): self
+    {
+        $this->plaintextPasswordResetHash = $plaintext;
+
+        return $this;
+    }
+
+    #[Ignore]
+    public function getPlaintextPasswordResetHash(): ?string
+    {
+        return $this->plaintextPasswordResetHash;
     }
 
     /**

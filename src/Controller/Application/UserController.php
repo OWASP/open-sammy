@@ -7,6 +7,7 @@ namespace App\Controller\Application;
 use App\DTO\NewUserDTO;
 use App\Entity\Group;
 use App\Entity\User;
+use App\Enum\MailTemplateType;
 use App\Enum\Role;
 use App\Event\Admin\Create\UserCreatedEvent;
 use App\Exception\BadGroupForUserSuppliedException;
@@ -173,6 +174,24 @@ class UserController extends AbstractController
             $this->addFlash('success', $this->translator->trans('application.user.delete_success', ['user' => trim("$chosenUser")], 'application'), true);
         } catch (\Throwable) {
             $this->addFlash('error', $this->translator->trans('application.user.delete_error', [], 'application'));
+        }
+
+        return $this->safeRedirect($request, 'app_user_index');
+    }
+
+    #[Route('/resend-welcome/{id}', name: 'resend_welcome', requirements: ['id' => "\d+"], methods: ['POST'])]
+    #[IsGranted('USER_EDIT', 'chosenUser')]
+    public function resendWelcome(Request $request, User $chosenUser, UserService $userService): Response
+    {
+        if (!$this->isCsrfTokenValid((string) $this->getUser()?->getId(), $request->request->get('_token'))) {
+            return $this->safeRedirect($request, 'app_user_index');
+        }
+
+        $sent = $userService->welcomeUser($chosenUser, MailTemplateType::USER_WELCOME, flush: true);
+        if ($sent) {
+            $this->addFlash('success', $this->translator->trans('application.user.resend_welcome_success', ['user' => trim("$chosenUser")], 'application'));
+        } else {
+            $this->addFlash('error', $this->translator->trans('application.user.resend_welcome_error', [], 'application'));
         }
 
         return $this->safeRedirect($request, 'app_user_index');
