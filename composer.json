@@ -25,6 +25,7 @@
     "google/apiclient": "2.*",
     "guzzlehttp/guzzle": "7.*",
     "league/commonmark": "^2.4",
+    "opis/json-schema": "^2.6",
     "phpdocumentor/reflection-docblock": "5.*",
     "phpmailer/phpmailer": "6.*",
     "phpoffice/phpspreadsheet": "*",

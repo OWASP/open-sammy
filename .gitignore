@@ -61,3 +61,4 @@ private
 ###< friendsofphp/php-cs-fixer ###
 /assets/vendor
 /tests/_coverage
+.claude

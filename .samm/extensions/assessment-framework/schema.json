@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/DRaichev/SAMM-Assessment-Format-Framework-Extension/main/assessment-framework-extension.schema.json",
+  "title": "Assessment Framework Extension",
+  "description": "JSON Schema for the Assessment Framework Extension, which identifies the security maturity framework used for an assessment",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "const": "Assessment Framework",
+      "description": "Extension identifier - must be 'Assessment Framework'"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Semantic version of the extension",
+      "examples": ["1.0.0"]
+    },
+    "assessmentFramework": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Name of the security maturity framework used for the assessment",
+      "examples": ["SAMM", "BSIMM", "ISO 27001", "NIST CSF"]
+    }
+  },
+  "required": ["name", "version", "assessmentFramework"],
+  "additionalProperties": false
+}

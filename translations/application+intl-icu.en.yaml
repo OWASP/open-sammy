@@ -210,6 +210,7 @@ application :
     send : Send
     contact : Contact
     toolbox_export : Export answers in SAMM toolbox format
+    samm_export : Export in .samm format
     clear_assessment_button : Clear assessment answers
     clear_assessment_text : Are you sure that you want to clear all your answers so far and start again?
     meta_description : SAMMY is a free OWASP SAMM tool that allows you to systematically assess, measure, manage and improve your security posture. SAMMY is an OWASP SAMM calculator that supports all OWASP SAMM Business functions and security practices.
