@@ -131,8 +131,8 @@ class SammToolboxImporterService extends ExcelImporter
             if (!isset($validationRemarksForStream[$streamId])) {
                 $validationRemarksForStream[$streamId] = "";
             }
-            if ($interviewSheet->getCell([$interviewRemarksColumn, $interviewRemarksRow])->getCalculatedValue() !== null) {
-                $validationRemarksForStream[$streamId] .= $interviewSheet->getCell([$interviewRemarksColumn, $interviewRemarksRow])->getCalculatedValue()."<br/>";
+            if ($interviewSheet->getCell([$interviewRemarksColumn, $interviewRemarksRow])->getValue() !== null) {
+                $validationRemarksForStream[$streamId] .= $interviewSheet->getCell([$interviewRemarksColumn, $interviewRemarksRow])->getValue()."<br/>";
             }
             if ($answerFromSheet !== null && $answerFromSheet !== '' && $answerFromSheet !== 0) {
                 $answerWasFound = false;

@@ -22,6 +22,9 @@ abstract class ExcelImporter
 {
     protected function loadPhpExcelObject(string $fileName): Spreadsheet
     {
-        return IOFactory::load($fileName);
+        $reader = IOFactory::createReaderForFile($fileName);
+        $reader->setReadDataOnly(true);
+
+        return $reader->load($fileName);
     }
 }
