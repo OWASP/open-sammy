@@ -110,6 +110,7 @@ class ReportingController extends AbstractController
             return $this->safeRedirect($request, 'app_index');
         }
         $project = $projectService->getCurrentProject();
+        $this->denyAccessUnlessGranted('PROJECT_ACCESS', $project);
         $assessment = $project->getAssessment();
 
         $filePath = $assessmentExporterService->getToolbox($assessment, $project);
@@ -125,6 +126,7 @@ class ReportingController extends AbstractController
         }
 
         $project = $projectService->getCurrentProject();
+        $this->denyAccessUnlessGranted('PROJECT_ACCESS', $project);
         $assessment = $project->getAssessment();
 
         try {
