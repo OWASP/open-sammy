@@ -11,28 +11,12 @@ class RandomStringGenerator
 {
     public function base32(int $length = 8): string
     {
-        try {
-            return Base32::encodeUnpadded(random_bytes($length));
-        } catch (\Exception $e) {
-            // this should not happen
-            // if happen there is something wrong with php config or with your pc
-            // TODO Should this catch exist?
-        }
-
-        return '';
+        return Base32::encodeUnpadded(random_bytes($length));
     }
 
     public function base64(int $length = 8): string
     {
-        try {
-            return Base64::encodeUnpadded(random_bytes($length));
-        } catch (\Exception $e) {
-            // this should not happen
-            // if happen there is something wrong with php config or with your pc
-            // TODO Should this catch exist?
-        }
-
-        return '';
+        return Base64::encodeUnpadded(random_bytes($length));
     }
 
     /**
