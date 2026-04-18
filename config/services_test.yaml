@@ -7,3 +7,7 @@ services:
     public : true
     autowire : true
     autoconfigure : true
+  App\Service\MailingService :
+    class : App\Tests\_support\StubMailingService
+    autowire : true
+    autoconfigure : true

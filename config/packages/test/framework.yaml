@@ -5,3 +5,23 @@ framework:
     test: true
     session:
       storage_factory_id: session.storage.factory.mock_file
+    cache:
+        pools:
+            cache.rate_limiter:
+                adapter: cache.adapter.array
+    rate_limiter:
+        login:
+            policy: sliding_window
+            limit: 5
+            interval: '1 minute'
+            cache_pool: cache.rate_limiter
+        mfa:
+            policy: sliding_window
+            limit: 5
+            interval: '1 minute'
+            cache_pool: cache.rate_limiter
+        password_reset:
+            policy: sliding_window
+            limit: 5
+            interval: '1 hour'
+            cache_pool: cache.rate_limiter

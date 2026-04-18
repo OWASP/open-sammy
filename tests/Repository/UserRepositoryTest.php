@@ -103,12 +103,10 @@ class UserRepositoryTest extends AbstractKernelTestCase
      * @dataProvider loadUserByPasswordResetHashProvider
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function testLoadUserByPasswordResetHash(?User $user, bool $isExpectingException): void
+    public function testLoadUserByPasswordResetHash(?User $user, string $plaintextToken, bool $isExpectingException): void
     {
-        $hash = "wrongHash";
         if ($user !== null) {
             $this->entityManager->persist($user);
-            $hash = $user->getPasswordResetHash();
         }
         $this->entityManager->flush();
 
@@ -116,7 +114,7 @@ class UserRepositoryTest extends AbstractKernelTestCase
             $this->expectException(\Exception::class);
         }
 
-        $resultUser = static::getContainer()->get(UserRepository::class)->loadUserByPasswordResetHash($hash);
+        $resultUser = static::getContainer()->get(UserRepository::class)->loadUserByPasswordResetHash($plaintextToken);
 
         if (!$isExpectingException) {
             self::assertNotNull($resultUser);
@@ -128,18 +126,21 @@ class UserRepositoryTest extends AbstractKernelTestCase
      */
     public function loadUserByPasswordResetHashProvider(): array
     {
+        $plaintext = bin2hex(random_bytes(5))."Gj2323jk2jjkanu3hakwj3hajk3";
         $user = (new UserBuilder())
-            ->withPasswordResetHash(bin2hex(random_bytes(5))."Gj2323jk2jjkanu3hakwj3hajk3")
+            ->withPasswordResetHash(\App\Service\ResetPasswordService::hashToken($plaintext))
             ->withPasswordResetHashExpiration(new \DateTime('tomorrow'))
             ->build();
 
         return [
             'Positive test 1. Expect user' => [
-                $user, // hash
-                false, // is expecting exception
+                $user,
+                $plaintext,
+                false,
             ],
             'Negative test 1. Wrong hash supplied. No user expected, but exception' => [
                 null,
+                'wrongHash',
                 true,
             ],
         ];
