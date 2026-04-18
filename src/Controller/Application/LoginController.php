@@ -135,8 +135,8 @@ class LoginController extends AbstractController
             $user = $userRepository->findOneBy(['email' => $email, 'deletedAt' => null]);
             if ($user !== null && !in_array(Role::ADMINISTRATOR->string(), $user->getRoles(), true)) {
                 $status = $passwordResetService->reset($user);
-                if ($status) {
-                    $mailingService->add(\App\Enum\MailTemplateType::USER_PASSWORD_RESET, $user);
+                if ($status && !$mailingService->sendImmediate(\App\Enum\MailTemplateType::USER_PASSWORD_RESET, $user)) {
+                    $this->logger->error('Password reset email send failed', ['userId' => $user->getId()]);
                 }
             }
 

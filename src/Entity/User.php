@@ -90,10 +90,6 @@ class User extends AbstractEntity implements BackupCodeInterface, PasswordResetI
     protected ?string $salt = "";
 
     #[Ignore]
-    #[ORM\Column(name: "`failed_logins`", type: Types::INTEGER)]
-    protected int $failedLogins = 0;
-
-    #[Ignore]
     #[ORM\Column(name: "`secret_key`", type: Types::STRING, nullable: true)]
     protected ?string $secretKey = "";
 
@@ -115,6 +111,9 @@ class User extends AbstractEntity implements BackupCodeInterface, PasswordResetI
     #[Ignore]
     #[ORM\Column(name: "`password_reset_hash_expiration`", type: Types::DATETIME_MUTABLE, nullable: true)]
     protected ?\DateTime $passwordResetHashExpiration = null;
+
+    #[Ignore]
+    protected ?string $plaintextPasswordResetHash = null;
 
     #[ORM\OneToMany(mappedBy: "assignedTo", targetEntity: Stage::class, cascade: ["persist"], fetch: "LAZY", orphanRemoval: false)]
     #[ORM\OrderBy(["id" => "ASC"])]
@@ -342,18 +341,6 @@ class User extends AbstractEntity implements BackupCodeInterface, PasswordResetI
         return $this->salt;
     }
 
-    public function setFailedLogins(int $failedLogins): self
-    {
-        $this->failedLogins = $failedLogins;
-
-        return $this;
-    }
-
-    public function getFailedLogins(): int
-    {
-        return $this->failedLogins;
-    }
-
     /**
      * Erase credentials
      * @inheritDoc
@@ -460,6 +447,19 @@ class User extends AbstractEntity implements BackupCodeInterface, PasswordResetI
         return $this->passwordResetHashExpiration;
     }
 
+    public function setPlaintextPasswordResetHash(?string $plaintext): self
+    {
+        $this->plaintextPasswordResetHash = $plaintext;
+
+        return $this;
+    }
+
+    #[Ignore]
+    public function getPlaintextPasswordResetHash(): ?string
+    {
+        return $this->plaintextPasswordResetHash;
+    }
+
     /**
      * This method is a copy constructor that will return a copy object (except for the id field)
      * Note that this method will not save the object
@@ -549,7 +549,6 @@ class User extends AbstractEntity implements BackupCodeInterface, PasswordResetI
         return [
             "password",
             "salt",
-            "failedLogins",
             "secretKey",
             "trustedVersion",
             "backupCodes",

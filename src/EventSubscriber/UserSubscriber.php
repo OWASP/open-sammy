@@ -103,7 +103,6 @@ class UserSubscriber implements EventSubscriberInterface
         $user->setLastLogin(new \DateTime('now'));
         $user->setPasswordResetHash(null);
         $user->setPasswordResetHashExpiration(null);
-        $user->setFailedLogins(0);
         $this->entityManager->flush();
         
         $request = $event->getRequest();

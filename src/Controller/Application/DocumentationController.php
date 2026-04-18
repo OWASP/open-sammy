@@ -6,24 +6,15 @@ namespace App\Controller\Application;
 
 use App\DTO\DocumentationDTO;
 use App\Entity\AssessmentStream;
-use App\Entity\Project;
 use App\Enum\Custom\RemarkType;
 use App\Exception\InsufficientAttachmentRemarkParameters;
 use App\Exception\InsufficientPermissionsToSaveRemarkException;
 use App\Form\Application\DocumentationType;
 use App\Service\RemarkService;
-use App\Service\SanitizerService;
-use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/documentation', name: 'documentation_')]
@@ -122,77 +113,6 @@ class DocumentationController extends AbstractController
             'remarkLevels' => $remarkService->findAllCurrentAndOldRemarkLevels($assessmentStream),
             'renderDocumentationContent' => $renderDocumentationContent,
         ]);
-    }
-
-    #[Route('/show/{id}/{file}', name: 'show', requirements: ['file' => '.*'])]
-    #[IsGranted('PROJECT_ACCESS', 'project')]
-    public function show(
-        KernelInterface $kernel,
-        Project $project,
-        string $file,
-    ): Response {
-        $filePath = $this->findFilePath($project, $file, $kernel);
-
-        $response = new Response(status: Response::HTTP_FORBIDDEN);
-        if ($filePath !== null) {
-            $response = $this->file($filePath, disposition: ResponseHeaderBag::DISPOSITION_INLINE);
-        }
-
-        return $response;
-    }
-
-    #[Route('/preview/{id}/{file}', name: 'preview', requirements: ['file' => '.*'])]
-    #[IsGranted('PROJECT_ACCESS', 'project')]
-    public function preview(
-        KernelInterface $kernel,
-        Project $project,
-        string $file,
-    ): Response {
-        $filePath = $this->findFilePath($project, $file, $kernel);
-
-        $response = new Response(status: Response::HTTP_FORBIDDEN);
-        if ($filePath !== null) {
-            // Get MIME Type
-            $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
-            $mimeType = finfo_file($fileInfo, $filePath);
-            finfo_close($fileInfo);
-
-            $response = $this->render('/application/documentation/preview.html.twig', [
-                'mime' => $mimeType,
-                'filePath' => $this->generateUrl(
-                    'app_documentation_show',
-                    [
-                        'id' => $project->getId(),
-                        'file' => $file,
-                    ]
-                ),
-                'text' => file_get_contents($filePath, length: 200),
-            ]);
-        }
-
-        return $response;
-    }
-
-    private function findFilePath(Project $project, string $file, KernelInterface $kernel): ?string
-    {
-        $finder = new Finder();
-
-        try {
-            $finder->files()->in($kernel->getProjectDir()."/private/projects/{$project->getId()}");
-            $finder->path($file);
-            $iterator = $finder->getIterator();
-            $iterator->rewind();
-            $foundSPLInfo = $iterator->current();
-        } catch (DirectoryNotFoundException $e) {
-            $foundSPLInfo = null;
-        }
-
-        $result = null;
-        if ($foundSPLInfo !== null) {
-            $result = $foundSPLInfo->getRealPath();
-        }
-
-        return $result;
     }
 
 }

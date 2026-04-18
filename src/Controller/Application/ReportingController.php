@@ -14,6 +14,7 @@ use App\Service\SammExportService;
 use App\Service\ScoreService;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -109,6 +110,7 @@ class ReportingController extends AbstractController
             return $this->safeRedirect($request, 'app_index');
         }
         $project = $projectService->getCurrentProject();
+        $this->denyAccessUnlessGranted('PROJECT_ACCESS', $project);
         $assessment = $project->getAssessment();
 
         $filePath = $assessmentExporterService->getToolbox($assessment, $project);
@@ -124,6 +126,7 @@ class ReportingController extends AbstractController
         }
 
         $project = $projectService->getCurrentProject();
+        $this->denyAccessUnlessGranted('PROJECT_ACCESS', $project);
         $assessment = $project->getAssessment();
 
         try {
@@ -136,12 +139,19 @@ class ReportingController extends AbstractController
 
         $frameworkName = $project->getMetamodel()?->getName() ?? 'SAMM';
         $filename = sprintf('%s_%s_%s.samm.json', $project->getName(), $frameworkName, uniqid());
+        $asciiFilename = preg_replace('/[^A-Za-z0-9._-]/', '_', $filename);
 
-        return new Response($json, Response::HTTP_OK, [
+        $response = new Response($json, Response::HTTP_OK, [
             'Content-Type' => 'application/json',
-            'Content-Disposition' => sprintf('attachment; filename="%s"', $filename),
             'Content-Length' => strlen($json),
         ]);
+        $response->headers->set('Content-Disposition', HeaderUtils::makeDisposition(
+            HeaderUtils::DISPOSITION_ATTACHMENT,
+            $filename,
+            $asciiFilename
+        ));
+
+        return $response;
     }
 
     #[Route('/overviewPartial/{id}', name: 'overviewPartial', requirements: ['id' => "\d+"], methods: ['GET'])]

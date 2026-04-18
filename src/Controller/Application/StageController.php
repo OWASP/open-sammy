@@ -18,7 +18,6 @@ use App\Service\AssignmentService;
 use App\Service\ProjectService;
 use App\Service\StageService;
 use App\Service\UserService;
-use App\Util\RepositoryParameters;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -107,10 +106,6 @@ class StageController extends AbstractController
         bool $short = false
     ): JsonResponse {
         $currentUser = $this->getUser();
-
-        $repositoryParameters = new RepositoryParameters();
-        $repositoryParameters->setFilter($request->query->get('term', ''));
-        $repositoryParameters->setOrderBy([['_user.id', 'ASC']]);
 
         $neededRole = match ($assessmentStream->getStatus()) {
             \App\Enum\AssessmentStatus::NEW, \App\Enum\AssessmentStatus::IN_EVALUATION => Role::EVALUATOR->string(),

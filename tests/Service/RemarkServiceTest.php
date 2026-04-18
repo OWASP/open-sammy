@@ -49,8 +49,7 @@ class RemarkServiceTest extends AbstractKernelTestCase
         // we need to create the file
         $randomNumbers = bin2hex(random_bytes(5));
         $path = $parameterBag->get('kernel.project_dir').'/private';
-        $attachmentFile = fopen($path.'/'.$randomNumbers.'_attachmentFile.txt', 'w');
-        fclose($attachmentFile);
+        file_put_contents($path.'/'.$randomNumbers.'_attachmentFile.txt', "sample content\n");
 
         $user = new User();
         $documentationDTO = (new DocumentationDTO());

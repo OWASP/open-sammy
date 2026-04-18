@@ -21,6 +21,7 @@ use App\Enum\Role;
 use App\Interface\EntityInterface;
 use App\Pagination\Paginator;
 use App\Repository\Abstraction\AbstractRepository;
+use App\Service\ResetPasswordService;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Query\ResultSetMapping;
@@ -199,7 +200,7 @@ class UserRepository extends AbstractRepository implements PasswordUpgraderInter
             ->andWhere('user.deletedAt IS NULL')
             ->andWhere('user.passwordResetHashExpiration > CURRENT_TIMESTAMP()')
             ->setParameter('adminRole', '"'.Role::ADMINISTRATOR->string().'"')
-            ->setParameter('hash', $hash);
+            ->setParameter('hash', ResetPasswordService::hashToken($hash));
 
         $user = $qb->getQuery()->getOneOrNullResult();
         if ($user === null) {
@@ -221,7 +222,7 @@ class UserRepository extends AbstractRepository implements PasswordUpgraderInter
             ->andWhere('user.deletedAt IS NULL')
             ->andWhere('user.passwordResetHashExpiration > CURRENT_TIMESTAMP()')
             ->setParameter('adminRole', '"'.Role::ADMINISTRATOR->string().'"')
-            ->setParameter('hash', $hash);
+            ->setParameter('hash', ResetPasswordService::hashToken($hash));
 
         $user = $qb->getQuery()->getOneOrNullResult();
         if ($user === null) {

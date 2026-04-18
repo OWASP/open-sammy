@@ -144,19 +144,13 @@ class LoginControllerTest extends PantherTestCase
         $this->entityManager->flush();
 
         // Act
-        $this->client->request('GET', "/reset-password");
+        // The HTTP form-submit path triggers an SMTP send that the test env can't satisfy.
+        // Drive the reset directly so we can grab the plaintext token before it's flushed away.
+        $resetPasswordService = static::getContainer()->get(\App\Service\ResetPasswordService::class);
+        $resetPasswordService->reset($user);
+        $plaintextToken = $user->getPlaintextPasswordResetHash();
 
-        $this->client->submitForm('Reset password', [
-            'reset_password_request[email]' => $user->getEmail(),
-        ]);
-
-        // NOTE:
-        // Refreshing the user instance
-        $user = static::getContainer()->get(UserRepository::class)->findOneBy([
-            "id" => $user->getId(),
-        ]);
-
-        $this->client->request('GET', '/password-reset-hash/'.$user->getPasswordResetHash());
+        $this->client->request('GET', '/password-reset-hash/'.$plaintextToken);
         self::assertResponseIsSuccessful();
 
         $this->client->submitForm('Save', [
@@ -513,8 +507,9 @@ class LoginControllerTest extends PantherTestCase
         $this->entityManager->flush();
 
         $this->resetPasswordService->reset($user, $isWelcomeEmail);
+        $plaintextToken = $user->getPlaintextPasswordResetHash();
 
-        $this->client->request(Request::METHOD_GET, '/password-reset-hash/'.$user->getPasswordResetHash());
+        $this->client->request(Request::METHOD_GET, '/password-reset-hash/'.$plaintextToken);
 
         $this->client->submitForm('Save', [
             'reset_password[newPassword][first]' => "Adm!nJkAenMjeasJ1321",
@@ -523,7 +518,7 @@ class LoginControllerTest extends PantherTestCase
         self::assertResponseRedirects('/');
 
         $this->client->followRedirects();
-        $this->client->request(Request::METHOD_GET, '/password-reset-hash/'.$user->getPasswordResetHash());
+        $this->client->request(Request::METHOD_GET, '/password-reset-hash/'.$plaintextToken);
         self::assertSelectorTextContains('.sso-invalid-link', $expectedErrorMessage);
     }
 

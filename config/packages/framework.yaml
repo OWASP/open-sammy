@@ -26,3 +26,17 @@ framework:
 
   validation: { enabled: true }
 
+  rate_limiter:
+    login:
+      policy: sliding_window
+      limit: 5
+      interval: '1 minute'
+    mfa:
+      policy: sliding_window
+      limit: 5
+      interval: '1 minute'
+    password_reset:
+      policy: sliding_window
+      limit: 5
+      interval: '1 hour'
+

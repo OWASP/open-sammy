@@ -68,7 +68,7 @@ class ResetPasswordServiceTest extends AbstractKernelTestCase
         self::assertNotEquals($passwordResetHashBeforeReset, $passwordResetHashAfterReset);
         self::assertTrue(strlen($passwordResetHashAfterReset) >= 6);
         self::assertTrue($hashEntropy >= 3);
-        self::assertTrue($hashExpireTime > new \DateTime('+3 hours') && $hashExpireTime < new \DateTime('+12 hours'));
+        self::assertTrue($hashExpireTime > new \DateTime('+30 minutes') && $hashExpireTime < new \DateTime('+2 hours'));
 
         $user->setPasswordResetHash('');
         $this->entityManager->flush();

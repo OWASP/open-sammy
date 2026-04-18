@@ -45,6 +45,11 @@
                 <i class="fa fa-address-card"></i>
             </button>
         </span>
+        <span data-toggle="modal" data-target="#resend-welcome-{{ user.id }}">
+            <button class="btn btn-info btn-sm text-white" data-toggle="tooltip" title="{{ 'application.user.resend_welcome_button'|trans({}, 'application') }}">
+                <i class="fas fa-envelope"></i>
+            </button>
+        </span>
         {% if user.id is not same as app.user.id %}
             <span data-toggle="modal" data-target="#delete-{{ user.id }}">
             <button class="btn btn-danger btn-sm text-white" data-toggle="tooltip" title="{{ 'application.user.delete_button'|trans }}">
@@ -52,6 +57,27 @@
             </button>
         </span>
         {% endif %}
+        <div class="modal fade" id="resend-welcome-{{ user.id }}" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">
+                            {{ 'application.user.resend_welcome_text'|trans({"user": user|trim}, 'application') }}
+                        </h4>
+                    </div>
+                    <div class="modal-footer">
+                        <form method="post" action="{{ path("app_user_resend_welcome", app.request.query.all|merge({'id': user.id})) }}">
+                            <input type="hidden" name="_token" value="{{ csrfToken }}">
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="far fa-times"></i>&nbsp; {{ 'application.general.cancel'|trans({},'application') }}</button>
+                            <button class="btn btn-info text-white" type="submit">
+                                <i class="fas fa-envelope"></i>
+                                &nbsp; {{ 'application.user.resend_welcome_confirm'|trans({},'application') }}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="modal fade" id="delete-{{ user.id }}" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">

@@ -173,6 +173,7 @@ application :
     reset_password_help : Te enviaremos las instrucciones por correo electrónico
     reset_password_button : Restablecer contraseña
     reset_password_success : Si tu nombre de usuario o correo electrónico era correcto, te hemos enviado un nuevo enlace de inicio de sesión por correo electrónico.
+    reset_password_send_failed : No pudimos enviar el correo de restablecimiento en este momento. Por favor, inténtalo de nuevo en unos minutos.
     password_change_success : Contraseña cambiada con éxito
     register : Registrarse
     register_button : Enviar registro
@@ -305,6 +306,11 @@ application :
     delete_text : ¿Estás seguro de que deseas eliminar a «{user}»?
     delete_success : «{user}» se eliminó correctamente.
     delete_error : Algo salió mal. No pudimos eliminar a este usuario.
+    resend_welcome_button : Reenviar correo de bienvenida
+    resend_welcome_text : ¿Reenviar el correo de bienvenida a «{user}»? Cualquier enlace de restablecimiento de contraseña existente quedará invalidado.
+    resend_welcome_confirm : Reenviar
+    resend_welcome_success : Correo de bienvenida reenviado a «{user}».
+    resend_welcome_error : No pudimos reenviar el correo de bienvenida. Por favor, inténtalo de nuevo más tarde.
     roles_modify_success : Los roles se modificaron correctamente.
     roles : Roles
     non_admin_role_enum : >-

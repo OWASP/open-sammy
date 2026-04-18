@@ -175,7 +175,8 @@ class ProjectRepository extends AbstractRepository
         $assessmentRepository = $this->getEntityManager()->getRepository(Assessment::class);
         $groupProjectRepository = $this->getEntityManager()->getRepository(GroupProject::class);
 
-        $assessment = $assessmentRepository->findOneBy(['project' => $project]);
+        /** @var Project $project */
+        $assessment = $project->getAssessment();
         $groupProject = $groupProjectRepository->findOneBy(['project' => $project]);
 
         $assessmentRepository->deepRestore($assessment);
