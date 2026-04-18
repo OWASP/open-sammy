@@ -133,19 +133,14 @@ class LoginController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $email = $form->get('email')->getData();
             $user = $userRepository->findOneBy(['email' => $email, 'deletedAt' => null]);
-            $sendFailed = false;
             if ($user !== null && !in_array(Role::ADMINISTRATOR->string(), $user->getRoles(), true)) {
                 $status = $passwordResetService->reset($user);
-                if ($status) {
-                    $sendFailed = !$mailingService->sendImmediate(\App\Enum\MailTemplateType::USER_PASSWORD_RESET, $user);
+                if ($status && !$mailingService->sendImmediate(\App\Enum\MailTemplateType::USER_PASSWORD_RESET, $user)) {
+                    $this->logger->error('Password reset email send failed', ['userId' => $user->getId()]);
                 }
             }
 
-            if ($sendFailed) {
-                $this->addFlash('error', $translator->trans('application.general.reset_password_send_failed', [], 'application'));
-            } else {
-                $this->addFlash('success', $translator->trans('application.general.reset_password_success', [], 'application'));
-            }
+            $this->addFlash('success', $translator->trans('application.general.reset_password_success', [], 'application'));
 
             return $this->redirectToRoute('app_login_login');
         }
