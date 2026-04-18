@@ -46,9 +46,11 @@ trait CrudAjaxModifyTrait
 
             return new JsonResponse(['status' => 'error', 'msg' => 'The field is readonly!'], Response::HTTP_BAD_REQUEST);
         } catch (\Throwable $t) {
+            $this->logger->error('abstractAjaxModify failed', ['exception' => $t]);
+
             return new JsonResponse([
                 'status' => 'error',
-                'msg' => $this->translator->trans('admin.general.exception_message', ['message' => $t->getMessage()]),
+                'msg' => $this->translator->trans('admin.general.exception_message', ['message' => '']),
             ]);
         }
     }
