@@ -3,9 +3,9 @@
 
 
 "@babel/runtime@^7.29.2":
-  version "7.29.7"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.29.7.tgz#12022450c45a4da6d8d8287b18a4ff2ddb23f768"
-  integrity sha512-Nq8OhGWiZIZGV6hLHoyAKLLcJihP/xFeBMGJoUrxTX2psI8dCifzLhZISFb+VWS3wFMRDmCGw5R+dOySCqPLhw==
+  version "7.29.14"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.29.14.tgz#9ad0cc2addbbc8c46adaec9e90b21bb76d42b483"
+  integrity sha512-Y5tqevQaUAZhhj82BpYMNC1ssvLQTVAfwKdm8iy8qwmhvC2/CpcAu8OC+QEtjM7pMk7knx83u1Qj8gzkicyelw==
 
 "@chenfengyuan/datepicker@1.*":
   version "1.0.10"
@@ -30,9 +30,9 @@ block-ui@2.*:
     jquery ">=1.7.x"
 
 bootstrap-table@1.*:
-  version "1.27.3"
-  resolved "https://registry.yarnpkg.com/bootstrap-table/-/bootstrap-table-1.27.3.tgz#99c0fe984b3b5d58ca7667699f9dd41b446564ef"
-  integrity sha512-XB+8E5g72tdd18qcoV00pnz5PDl/w+sAaDrliJy11YZrJp3nj3Uw1KogblHYMsbeQW+FhAMJOu9HG8l0M8LyQA==
+  version "1.28.0"
+  resolved "https://registry.yarnpkg.com/bootstrap-table/-/bootstrap-table-1.28.0.tgz#4c993eb8ad1a861af842d9ab47ea25ed17cd29ec"
+  integrity sha512-VAVMoXtDEjjJArDtSFW/jpUTCTURUYE9TNHzTYsztTGAbyyP/XIycL7B0tOjwY9Z9nURrpqsJU1yscAbt95C7g==
 
 bootstrap4-toggle@^3.6:
   version "3.6.1"
@@ -45,9 +45,9 @@ bootstrap@4.*:
   integrity sha512-51Bbp/Uxr9aTuy6ca/8FbFloBUJZLHwnhTcnjIeRn2suQWsWzcuJhGjKDB5eppVte/8oCdOL3VuwxvZDUggwGQ==
 
 chart.js@^4:
-  version "4.5.1"
-  resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-4.5.1.tgz#19dd1a9a386a3f6397691672231cb5fc9c052c35"
-  integrity sha512-GIjfiT9dbmHRiYi6Nl2yFCq7kkwdkp1W/lp2J99rX0yo9tgJGn3lKQATztIjb5tVtevcBtIdICNWqlq5+E8/Pw==
+  version "4.6.1"
+  resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-4.6.1.tgz#40a924bc0b92544ed66fa3f4873981152fc62c52"
+  integrity sha512-hJyniucsFmq//EvXYvJ6c6mahPoI3kaxdjVH8awTaJ/fDNWeSqqqArixMJWkWNN6fcYvPU3HneSANFNYtRi61g==
   dependencies:
     "@kurkle/color" "^0.3.0"
 
@@ -117,9 +117,9 @@ daterangepicker@3.*:
     moment "^2.9.0"
 
 i18next-icu@2.*:
-  version "2.4.3"
-  resolved "https://registry.yarnpkg.com/i18next-icu/-/i18next-icu-2.4.3.tgz#61be8d42a091d28e9245cc3f61edfa34e2b0f5a1"
-  integrity sha512-Clb5XCp416Z+BkJUTATCjmDcw2AFzSUDVLxLVK/KhtXP6TJQHrht+6MqoJU1hCpyoCBKe59wMO9pvCvYroNcKg==
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/i18next-icu/-/i18next-icu-2.7.0.tgz#3d8f702affb7fe829728310f662e2e65b14c5f3f"
+  integrity sha512-ArIdgwcqHFO+YrFHwLKyINa1yvFnVwaV+1SVI8Mf85TVDRDLR+4FSGPz2WswQUuWqZLge9MqnxM4YWvmYhb+hg==
 
 i18next@25.*:
   version "25.10.10"
@@ -146,14 +146,14 @@ jquery.fancytree@2.*:
   integrity sha512-6ntTplhfYKWz74GLpeeE9B62VqhsF+bd80gLZRDD1gl7Vv9WTqqQrCsrGMMu0PB6JLhNOXhf17xIcYpARG+N3g==
 
 jquery@*, "jquery@1.8 - 4", jquery@>=1.10, jquery@>=1.12.0, jquery@>=1.7, jquery@>=1.7.x:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/jquery/-/jquery-4.0.0.tgz#95c33ac29005ff72ec444c5ba1cf457e61404fbb"
-  integrity sha512-TXCHVR3Lb6TZdtw1l3RTLf8RBWVGexdxL6AC8/e0xZKEpBflBsjh9/8LXw+dkNFuOyW9B7iB3O1sP7hS0Kiacg==
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-4.1.0.tgz#b15839cd1ea0e555ee3dce856dd9568e1b81f504"
+  integrity sha512-tnN2N83S+xD3yhmdBP4nnJ1XOO0Fl586rG23FA5h/JAe8XN3W9a1zGwDMltBptn+UpcqEKicnO61+jQ0EiF2fw==
 
 jquery@3.*:
-  version "3.7.1"
-  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.7.1.tgz#083ef98927c9a6a74d05a6af02806566d16274de"
-  integrity sha512-m4avr8yL8kmFN8psrbFFFmB/If14iN5o9nw/NgnnM+kybDJpRsAynV2BsfpTYrTRysYUdADVD7CkUUizgkpLfg==
+  version "3.8.0"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.8.0.tgz#3bf83324052cc9e7148718e9d6ea3cde1b2b9f5a"
+  integrity sha512-AOYt0viqPysMUTq45O8gF9DuOnBT3Il/8WtM/TT8z/2QeGsZ70ImwSJtNFxznn2R71v8yIgaEunOGo82OY/f0g==
 
 metismenu@3.*:
   version "3.1.0"
@@ -161,9 +161,9 @@ metismenu@3.*:
   integrity sha512-Nb9HhDr2bXcK44//iOImJUV/bS3+qLR3SsVkMGDd50mfZ6kWn6B3KpfELbnZhTGThRAPmAj3ZS1yYvuiBXlLPw==
 
 moment@2.*, moment@^2.9.0:
-  version "2.30.1"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.30.1.tgz#f8c91c07b7a786e30c59926df530b4eac96974ae"
-  integrity sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==
+  version "2.31.0"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.31.0.tgz#6e19184e8005a9dfc61c9351263d4d6ea2ace7aa"
+  integrity sha512-0acOTfMiWOheYS4eoWb80yYMb/JLvVv9SHbs2PehaDzfUG0Bw855SKyk0IKTnPGa5+U2bmi3W68l1+sGLX/pvw==
 
 nouislider@15.*:
   version "15.8.1"
